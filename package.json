@@ -1,7 +1,7 @@
 {
-  "name": "TEMPLATE",
-  "version": "1.0.0",
-  "description": "TEMPLATE",
+  "name": "PSP_AssetManagerApp",
+  "version": "0.0.1",
+  "description": "PSP Asset Management App",
   "main": "bin/server",
   "scripts": {
     "start": "node bin/server",
@@ -15,6 +15,6 @@
     "formidable": "latest",
     "nedb": "latest",
     "node-fetch": "latest",
-    "sqlite3": "^4.0.0"
+    "sqlite3": "latest"
   }
 }

@@ -13,11 +13,15 @@ class app {
     }
 
     loadServer() {
-        const HTTP = require('http');
+        const HTTPS = require('https');
         const EJS = require('ejs');
-        const PORT = 8111;
+        const PORT = 443;
+        const SSL_OPTIONS = {
+            key: this.data_handler.getKey(),
+            cert: this.data_handler.getCert()
+        }
 
-        HTTP.createServer((request, response) => {
+        HTTPS.createServer(SSL_OPTIONS, (request, response) => {
 
             let httpHandler = (error, string, contentType) => {
                 if (error) {

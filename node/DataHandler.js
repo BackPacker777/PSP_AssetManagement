@@ -13,6 +13,8 @@ class DataHandler {
             }
             console.log(`Connected to Sqlite DB`);
         });
+        this.key = FS.readFileSync(`data/encryption/cert.key`);
+        this.cert = FS.readFileSync(`data/encryption/cert.pem`);
     }
 
     static renderDom(path, contentType, callback, encoding) {
@@ -33,6 +35,14 @@ class DataHandler {
             callback(finalData);
             return finalData;
         });
+    }
+
+    getKey() {
+        return FS.readFileSync(`data/encryption/cert.key`);
+    }
+
+    getCert() {
+        return FS.readFileSync(`data/encryption/cert.pem`);
     }
 }
 
