@@ -1,0 +1,67 @@
+    <form id="itemEntryForm" action="javascript:0">
+        <div class="grid-container">
+            <div class="grid-x grid-padding-x">
+                <div class="cell large-3 small-12">
+                    <span class="label">Item Name</span>
+                    <input type="text" id="itemName">
+                </div>
+                <div class="cell large-3 small-12">
+                    <span class="label">Item Maker</span>
+                    <input type="text" id="itemMaker">
+                </div>
+                <div class="cell large-3 small-12">
+                    <span class="label">Item Model</span>
+                    <input type="text" id="itemModel">
+                </div>
+                <div class="cell large-3 small-12">
+                    <span class="label">Asset Tag</span>
+                    <input type="number" id="assetTag" maxlength="10">
+                </div>
+            </div>
+            <div class="grid-x grid-padding-x">
+                <div class="cell large-3 small-12">
+                    <span class="label">Serial Number</span>
+                    <input type="text" id="serialNumber">
+                </div>
+                <div class="cell large-3 small-12">
+                    <span class="label">Asset Type</span>
+                    <select id="assetType" required>
+                        <option></option>
+                        <option value="tower">Computer Tower</option>
+                        <option value="lcd_monitor">LCD Monitor</option>
+                        <option value="printer">Printer</option>
+                        <option value="doc_cam">Document Camera</option>
+                        <option value="phone">Phone</option>
+                        <option value="projector">Projector</option>
+                        <option value="airtame">Air Tame</option>
+                        <option value="laptop">Laptop</option>
+                        <option value="ipad">iPad</option>
+                        <option value="consumable">Consumable</option>
+                    </select>
+                </div>
+                <div class="cell large-6 small-12">
+                    <span class="label">Item Description</span>
+                    <input type="text" id="itemDescription" maxlength="10">
+                </div>
+            </div>
+            <div class="grid-x grid-padding-x text-center">
+                <div class="cell large-4 small-4">
+                    <span class="label">Title 1</span>
+                    <input type="checkbox" value="1" id="title1">
+                </div>
+                <div class="cell large-4 small-4">
+                    <span class="label">Title 9</span>
+                    <input type="checkbox" value="1" id="title9">
+                </div>
+                <div class="cell large-4 small-4">
+                    <span class="label">31a</span>
+                    <input type="checkbox" value="1" id="31a">
+                </div>
+            </div>
+            <div class="grid-x grid-padding-x grid-padding-y">
+                <div class="cell">
+                    <input type="submit" class="button large expanded" id="itemEntryFormSubmit" value="Enter Item">
+                </div>
+            </div>
+        </div>
+    </form>

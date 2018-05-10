@@ -12,6 +12,7 @@ class Main {
 
     prepUX() {
         this.eventHandler.displayVariable();
+        // document.getElementById(`camera`).style.display = `none`;
     }
 
     static async populateZips() {

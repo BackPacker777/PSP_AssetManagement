@@ -52,30 +52,9 @@ image {
   background-color: #838383;
   color: white; }
 
-.xxx-thin {
-  height: 2em; }
-
-.xx-thin {
-  height: 2.5em; }
-
-.x-thin {
-  height: 2.8em; }
-
 #top {
   margin-top: 4px; }
 
 textarea {
   width: 100%;
   height: auto; }
-
-#tripNums {
-  width: 10em; }
-
-#tripMileage {
-  width: 10em; }
-
-#tripDate {
-  width: 10em; }
-
-#p_logo {
-  padding-top: 15px; }

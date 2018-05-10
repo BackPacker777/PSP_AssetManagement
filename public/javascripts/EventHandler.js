@@ -31,7 +31,7 @@ export default class EventHandler {
 
         captureButton.addEventListener('click', () => {
             context.drawImage(player, 0, 0, canvas.width, canvas.height);
-            player.srcObject.getVideoTracks().forEach(track => track.stop());
+            // player.srcObject.getVideoTracks().forEach(track => track.stop());
         });
         navigator.mediaDevices.getUserMedia(constraints)
             .then((stream) => {

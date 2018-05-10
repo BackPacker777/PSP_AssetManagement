@@ -6,15 +6,13 @@
   "scripts": {
     "start": "node bin/server",
     "build-css": "node-sass -w public/css/overrides.scss public/css/overrides.css",
-    "_comment": "How to do node-css -> //https://stackoverflow.com/a/31448585/466246"
+    "_comment": "How to do node-css -> https://stackoverflow.com/a/31448585/466246 "
   },
   "author": "Howard Bates",
   "license": "MIT",
   "dependencies": {
     "ejs": "latest",
     "formidable": "latest",
-    "nedb": "latest",
-    "node-fetch": "latest",
     "sqlite3": "latest"
   }
 }

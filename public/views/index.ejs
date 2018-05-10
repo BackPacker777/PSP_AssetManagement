@@ -6,26 +6,10 @@
             <h3>PSP Asset Management</h3>
         </div>
     </div>
-    <div class="cell small-12 text-center">
-        <video id="player" autoplay></video>
-        <canvas id="canvas" width=320 height=240></canvas>
-        <button id="capture" class="button large expanded">Capture</button>
-    </div>
+    <% include public/views/itemEntry.ejs %>
+    <% include public/views/camera.ejs %>
+    <% include public/views/itemList.ejs %>
 
-
-<!--    <form id="rosterForm" action="javascript:0">
-        <div class="small-11 small-centered cell">
-
-        </div>
-
-        <fieldset id="fieldset.0">
-
-		</fieldset>
-
-        <div class="small-22 small-centered cell">
-            <input type="submit" class="button large expanded" id="formSubmit1" name="formSubmit" value="PRESS FOR ONE (4)">
-        </div>
-    </form>-->
 </div>
 <!-- SCRIPTS -->
 <script src="public/javascripts/main.js" type="module"></script>
