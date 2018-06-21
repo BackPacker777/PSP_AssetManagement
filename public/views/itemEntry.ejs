@@ -1,29 +1,31 @@
     <form id="itemEntryForm" action="javascript:0">
         <div class="grid-container">
             <div class="grid-x grid-padding-x">
-                <div class="cell large-3 small-12">
+                <div class="cell large-6 small-6">
                     <span class="label">Item Name</span>
                     <input type="text" id="itemName">
                 </div>
-                <div class="cell large-3 small-12">
+                <div class="cell large-6 small-6">
                     <span class="label">Item Maker</span>
                     <input type="text" id="itemMaker">
                 </div>
-                <div class="cell large-3 small-12">
+            </div>
+            <div class="grid-x grid-padding-x">
+                <div class="cell large-6 small-6">
                     <span class="label">Item Model</span>
                     <input type="text" id="itemModel">
                 </div>
-                <div class="cell large-3 small-12">
+                <div class="cell large-6 small-6">
                     <span class="label">Asset Tag</span>
                     <input type="number" id="assetTag" maxlength="10">
                 </div>
             </div>
             <div class="grid-x grid-padding-x">
-                <div class="cell large-3 small-12">
+                <div class="cell large-6 small-6">
                     <span class="label">Serial Number</span>
                     <input type="text" id="serialNumber">
                 </div>
-                <div class="cell large-3 small-12">
+                <div class="cell large-6 small-6">
                     <span class="label">Asset Type</span>
                     <select id="assetType" required>
                         <option></option>
@@ -39,6 +41,8 @@
                         <option value="consumable">Consumable</option>
                     </select>
                 </div>
+            </div>
+            <div class="grid-x grid-padding-x">
                 <div class="cell large-6 small-12">
                     <span class="label">Item Description</span>
                     <input type="text" id="itemDescription" maxlength="10">
@@ -60,7 +64,7 @@
             </div>
             <div class="grid-x grid-padding-x grid-padding-y">
                 <div class="cell">
-                    <input type="submit" class="button large expanded" id="itemEntryFormSubmit" value="Enter Item">
+                    <input type="submit" class="button large expanded" id="itemSubmit" value="Submit Item">
                 </div>
             </div>
         </div>

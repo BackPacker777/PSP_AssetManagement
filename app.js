@@ -19,7 +19,7 @@ class app {
         const SSL_OPTIONS = {
             key: this.data_handler.getKey(),
             cert: this.data_handler.getCert()
-        }
+        };
 
         HTTPS.createServer(SSL_OPTIONS, (request, response) => {
 

@@ -1,22 +1,36 @@
 "use strict";
 
+import BCScan from './BCScan.js';
+
 export default class EventHandler {
-    constructor(data) {
-        this.variable = data;
-        this.handleButtons();
-        this.handleCamera();
+    constructor() {
+        this.handleItemSubmit();
+        this.handleItemReScan();
+        // this.handleCamera();
     }
 
-    displayVariable() {
-        console.log(this.variable);
+    handleItemSubmit() {
+        document.getElementById(`itemSubmit`).addEventListener(`click`, () => {
+            document.getElementById(`splashDiv`).style.display = `block`;
+            document.getElementById(`splashScanDiv`).style.display = `block`;
+            document.getElementById(`scannerDiv`).style.display = `none`;
+            document.getElementById(`itemEntryDiv`).style.display = `none`;
+            document.getElementById(`itemListDiv`).style.display = `none`;
+            document.getElementById(`scanResultsExistsDiv`).style.display = `none`;
+            document.getElementById(`scanResultsNotExistDiv`).style.display = `none`;
+        });
     }
 
-    handleButtons() {
-        for (let i = 0; i < document.getElementsByName('formSubmit').length; i++) {
-            document.getElementsByName('formSubmit')[i].addEventListener('click', () => {
-
-            });
-        }
+    handleItemReScan() {
+        document.getElementById(`reScanBtn`).addEventListener(`click`, () => {
+            document.getElementById(`splashDiv`).style.display = `block`;
+            document.getElementById(`splashScanDiv`).style.display = `block`;
+            document.getElementById(`scannerDiv`).style.display = `none`;
+            document.getElementById(`itemEntryDiv`).style.display = `none`;
+            document.getElementById(`itemListDiv`).style.display = `none`;
+            document.getElementById(`scanResultsExistsDiv`).style.display = `none`;
+            document.getElementById(`scanResultsNotExistDiv`).style.display = `none`;
+        });
     }
 
     handleCamera() {

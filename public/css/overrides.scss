@@ -78,3 +78,26 @@ textarea {
   width: 100%;
   height: auto;
 }
+
+.bdh-btn {
+  height: 120px;
+  font-size: 1.2em !important;
+}
+
+#scanner-container {
+  position: relative;
+  height: 250px;
+  width: 340px;
+  margin: 0 auto;
+}
+
+#scanner-container > canvas {
+  position: absolute;
+  height: 250px;
+  width: 340px;
+  margin: auto;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
