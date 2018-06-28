@@ -9,57 +9,57 @@ class DataHandler {
     constructor() {
         this.key = FS.readFileSync(`data/encryption/cert.key`);
         this.cert = FS.readFileSync(`data/encryption/cert.pem`);
-        this.createDB();
         this.initDB();
         // this.insertRow();
-        // this.queryData();
+        // this.queryData(123456);
         // this.db.close();
     }
 
-    createDB() {
+    initDB() {
         this.db = new SQL.Database(`data/asset_data.db`, (err) => {
             if (err) {
                 return console.error(err.message);
             }
-            console.log(`Connected to Sqlite DB`);
+            console.log(`Connected to Sqlite3 DB`);
         });
-    }
-
-    initDB() {
-        this.db.run(`CREATE TABLE IF NOT EXISTS assets (
+        this.db.run(`CREATE TABLE IF NOT EXISTS psp_assets (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT,
         maker TEXT,
         model TEXT,
         tag INTEGER,
         sn TEXT,
         type TEXT,
         description TEXT,
+        warranty INTEGER,
+        purchaseDate INTEGER,
         isTitle1 INTEGER DEFAULT 0,
         isTitle9 INTEGER DEFAULT 0,
         is31a INTEGER DEFAULT 0
-        )`); //https://stackoverflow.com/questions/40645216/check-if-sql-table-exists-in-python
-        console.log(`Sqlite table created`);
+        )`); // https://stackoverflow.com/questions/40645216/check-if-sql-table-exists-in-python
+        console.log(`Sqlite table -psp_assets- created`);
+        this.db.run(`PRAGMA AUTO_VACUUM = FULL`);
+        // date: http://www.sqlitetutorial.net/sqlite-date/
     }
 
-    insertRow() {
-        this.db.run(`INSERT INTO assets (name) VALUES(?)`, ['WIGgLES-0'], function(err) {
-            if (err) {
-                return console.log(err.message);
+    insertRow(formData) {
+        this.db.run(`INSERT INTO psp_assets (maker,model,tag,sn,type,description,warranty,purchaseDate,isTitle1,isTitle9,is31a)
+         VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [formData.maker, formData.model, formData.tag, formData.sn, formData.type, formData.description, formData.warranty, formData.purchaseDate, formData.isTitle1, formData.isTitle9, formData.is31a],
+            function(err) {
+                if (err) {
+                    return console.log(err.message);
+                }
             }
-            console.log(`A row has been inserted with rowid ${this.lastID}`);
-        });
+        );
     }
 
-    queryData() {
-        let sql = `SELECT DISTINCT Name name FROM assets ORDER BY name`;
-        this.db.all(sql, [], (err, rows) => {
-            if (err) {
-                throw err;
+    queryData(assetTag) {
+        this.db.get(`SELECT * FROM assets WHERE tag = assetTag`, (error, row) => {
+            if (row) {
+                console.log(`TRUE`);
+            } else {
+                console.log(`FALSE`);
             }
-            rows.forEach((row) => {
-                console.log(row.name);
-            });
         });
     }
 

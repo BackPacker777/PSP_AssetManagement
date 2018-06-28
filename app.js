@@ -3,6 +3,7 @@
 "use strict";
 
 const DATA_HANDLER = require('./node/DataHandler');
+const FORMIDABLE = require('formidable');
 
 class app {
     constructor() {
@@ -44,9 +45,13 @@ class app {
 
             if (request.method === 'POST') {
                 if (request.headers['x-requested-with'] === 'fetch.0') {
-                    DATA_HANDLER.setBaseData((zipData) => {
-                        response.writeHead(200, {'content-type': 'application/json'});
-                        response.end(zipData);
+                    let formData = {};
+                    new FORMIDABLE.IncomingForm().parse(request).on('field', (field, name) => {
+                        formData[field] = name;
+                    }).on('error', (err) => {
+                        next(err);
+                    }).on('end', () => {
+                        this.data_handler.insertRow(formData);
                     });
                 } else {
                     console.log(`Yo, somethings super wrong BDH!`);

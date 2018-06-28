@@ -13,7 +13,7 @@
   "dependencies": {
     "ejs": "latest",
     "formidable": "latest",
-    "quagga": "^0.12.1",
+    "quagga": "latest",
     "sqlite3": "latest"
   }
 }

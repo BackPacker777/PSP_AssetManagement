@@ -1,9 +1,10 @@
-    <form id="itemEntryForm" action="javascript:0">
-        <div class="grid-container">
+    <div class="grid-container">
+        <!--<form id="itemEntryForm">-->
+        <form id="itemEntryForm" action="javascript:void(0)">
             <div class="grid-x grid-padding-x">
                 <div class="cell large-6 small-6">
-                    <span class="label">Item Name</span>
-                    <input type="text" id="itemName">
+                    <span class="label">Asset Tag</span>
+                    <input type="number" id="assetTag" maxlength="10">
                 </div>
                 <div class="cell large-6 small-6">
                     <span class="label">Item Maker</span>
@@ -11,13 +12,9 @@
                 </div>
             </div>
             <div class="grid-x grid-padding-x">
-                <div class="cell large-6 small-6">
+                <div class="cell large-12 small-12">
                     <span class="label">Item Model</span>
                     <input type="text" id="itemModel">
-                </div>
-                <div class="cell large-6 small-6">
-                    <span class="label">Asset Tag</span>
-                    <input type="number" id="assetTag" maxlength="10">
                 </div>
             </div>
             <div class="grid-x grid-padding-x">
@@ -48,24 +45,39 @@
                     <input type="text" id="itemDescription" maxlength="10">
                 </div>
             </div>
+            <div class="grid-x grid-padding-x">
+                <div class="cell large-6 small-6">
+                    <span class="label">Purchase Date</span>
+                    <input type="date" id="purchaseDate">
+                </div>
+                <div class="cell large-6 small-6">
+                    <span class="label">Item Warranty (Months)</span>
+                    <input type="number" id="itemWarranty" maxlength="3">
+                </div>
+            </div>
             <div class="grid-x grid-padding-x text-center">
                 <div class="cell large-4 small-4">
                     <span class="label">Title 1</span>
-                    <input type="checkbox" value="1" id="title1">
+                    <input type="checkbox" value="1" id="title1" name="titleCheckBox">
                 </div>
                 <div class="cell large-4 small-4">
                     <span class="label">Title 9</span>
-                    <input type="checkbox" value="1" id="title9">
+                    <input type="checkbox" value="1" id="title9" name="titleCheckBox">
                 </div>
                 <div class="cell large-4 small-4">
                     <span class="label">31a</span>
-                    <input type="checkbox" value="1" id="31a">
+                    <input type="checkbox" value="1" id="31a" name="titleCheckBox">
                 </div>
             </div>
-            <div class="grid-x grid-padding-x grid-padding-y">
-                <div class="cell">
-                    <input type="submit" class="button large expanded" id="itemSubmit" value="Submit Item">
-                </div>
+        </form>
+        <div class="grid-x grid-padding-x grid-padding-y">
+            <div class="cell">
+                <input type="submit" class="success button large expanded" id="itemSubmit" value="Submit Item">
             </div>
         </div>
-    </form>
+        <div class="grid-x grid-padding-x text-center">
+            <div class="cell large-12 small-12">
+                <p>:-D</p>
+            </div>
+        </div>
+    </div>

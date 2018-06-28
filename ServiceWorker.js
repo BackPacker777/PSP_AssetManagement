@@ -2,16 +2,23 @@
 
 'use strict';
 
-const CACHE_NAME = "1.00";
+const CACHE_NAME = "1.03";
 let cacheFiles = [
     '/public/views/index.ejs',
     '/public/views/header.ejs',
     '/public/views/footer.ejs',
+    '/public/views/BCReader.ejs',
+    '/public/views/itemEntry.ejs',
+    '/public/views/itemList.ejs',
+    '/public/views/splash.ejs',
+    '/public/views/scanResults.ejs',
     '/public/css/foundation.min.css',
     '/public/css/overrides.css',
     '/public/javascripts/main.js',
-    '/public/favicons/favicon.ico',
-    '/public/favicons/android-chrome-192x192.png'
+    '/public/javascripts/quagga.js',
+    '/public/javascripts/EventHandler.js',
+    '/public/javascripts/SplashEventHandler.js',
+    '/public/favicons/favicon.ico'
 ];
 
 self.addEventListener('install', (event) => {
