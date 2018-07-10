@@ -7,6 +7,7 @@ export default class EventHandler {
         this.handleTitleCheckBoxes();
         this.handleItemSubmit();
         this.handleItemReScan();
+        this.handleItemFind();
         // this.handleCamera();
     }
 
@@ -57,6 +58,10 @@ export default class EventHandler {
             document.getElementById(`scanResultsExistsDiv`).style.display = `none`;
             document.getElementById(`scanResultsNotExistDiv`).style.display = `none`;
         });
+    }
+
+    handleItemFind() {
+
     }
 
     sendFormData() {

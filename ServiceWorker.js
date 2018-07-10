@@ -2,8 +2,9 @@
 
 'use strict';
 
-const CACHE_NAME = "1.03";
+const CACHE_NAME = "1.20";
 let cacheFiles = [
+    '/data/asset_data.db',
     '/public/views/index.ejs',
     '/public/views/header.ejs',
     '/public/views/footer.ejs',
