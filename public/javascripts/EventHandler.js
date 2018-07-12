@@ -61,7 +61,16 @@ export default class EventHandler {
     }
 
     handleItemFind() {
-
+        document.getElementById(`itemFindBtn`).addEventListener(`click`, () => {
+            document.getElementById(`splashDiv`).style.display = `none`;
+            document.getElementById(`splashScanDiv`).style.display = `none`;
+            document.getElementById(`scannerDiv`).style.display = `none`;
+            document.getElementById(`itemEntryDiv`).style.display = `none`;
+            document.getElementById(`itemListDiv`).style.display = `none`;
+            document.getElementById(`scanResultsExistsDiv`).style.display = `none`;
+            document.getElementById(`scanResultsNotExistDiv`).style.display = `none`;
+            document.getElementById(`itemFindDiv`).style.display = `block`;
+        });
     }
 
     sendFormData() {

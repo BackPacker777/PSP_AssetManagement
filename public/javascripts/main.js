@@ -22,11 +22,17 @@ class Main {
         document.getElementById(`itemListDiv`).style.display = `none`;
         document.getElementById(`scanResultsExistsDiv`).style.display = `none`;
         document.getElementById(`scanResultsNotExistDiv`).style.display = `none`;
+        document.getElementById(`itemFindDiv`).style.display = `none`;
     }
 
     static loadServiceWorker() {
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/ServiceWorker.js');
+            navigator.serviceWorker.register('/ServiceWorker.js')
+                .then((reg) => {
+                    console.log('Registration succeeded. Scope is ' + reg.scope);
+                }).catch((error) => {
+                console.log('Registration failed with ' + error);
+            });
         }
     }
 
