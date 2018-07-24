@@ -1,4 +1,4 @@
-let VERSION = 'v1.00';
+const VERSION = 'v1.00';
 
 let cacheFirstFiles = [
     '/public/views/index.ejs',

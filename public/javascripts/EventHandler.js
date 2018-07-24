@@ -8,6 +8,8 @@ export default class EventHandler {
         this.handleItemSubmit();
         this.handleItemReScan();
         this.handleItemFind();
+        this.handleItemList();
+        this.handleDone();
         // this.handleCamera();
     }
 
@@ -37,39 +39,50 @@ export default class EventHandler {
 
     handleItemSubmit() {
         document.getElementById(`itemSubmit`).addEventListener(`click`, () => {
-            document.getElementById(`splashDiv`).style.display = `block`;
-            document.getElementById(`splashScanDiv`).style.display = `block`;
-            document.getElementById(`scannerDiv`).style.display = `none`;
-            document.getElementById(`itemEntryDiv`).style.display = `none`;
-            document.getElementById(`itemListDiv`).style.display = `none`;
-            document.getElementById(`scanResultsExistsDiv`).style.display = `none`;
-            document.getElementById(`scanResultsNotExistDiv`).style.display = `none`;
+            EventHandler.setDivDisplay(`splashDiv`, `splashScanDiv`);
             this.sendFormData();
         });
     }
 
     handleItemReScan() {
         document.getElementById(`reScanBtn`).addEventListener(`click`, () => {
-            document.getElementById(`splashDiv`).style.display = `block`;
-            document.getElementById(`splashScanDiv`).style.display = `block`;
-            document.getElementById(`scannerDiv`).style.display = `none`;
-            document.getElementById(`itemEntryDiv`).style.display = `none`;
-            document.getElementById(`itemListDiv`).style.display = `none`;
-            document.getElementById(`scanResultsExistsDiv`).style.display = `none`;
-            document.getElementById(`scanResultsNotExistDiv`).style.display = `none`;
+            EventHandler.setDivDisplay(`splashDiv`, `splashScanDiv`);
+        });
+    }
+
+    handleDone() {
+        document.getElementById(`doneBtn`).addEventListener(`click`, () => {
+            EventHandler.setDivDisplay(`splashDiv`, `splashScanDiv`);
         });
     }
 
     handleItemFind() {
         document.getElementById(`itemFindBtn`).addEventListener(`click`, () => {
-            document.getElementById(`splashDiv`).style.display = `none`;
-            document.getElementById(`splashScanDiv`).style.display = `none`;
-            document.getElementById(`scannerDiv`).style.display = `none`;
-            document.getElementById(`itemEntryDiv`).style.display = `none`;
-            document.getElementById(`itemListDiv`).style.display = `none`;
-            document.getElementById(`scanResultsExistsDiv`).style.display = `none`;
-            document.getElementById(`scanResultsNotExistDiv`).style.display = `none`;
-            document.getElementById(`itemFindDiv`).style.display = `block`;
+            EventHandler.setDivDisplay(`itemFindDiv`);
+        });
+    }
+
+    handleItemList() {
+        document.getElementById(`itemListBtn`).addEventListener(`click`, () => {
+            EventHandler.setDivDisplay(`itemListDiv`, `doneDiv`);
+            fetch(document.url, {
+                method: 'POST',
+                headers: {
+                    'x-requested-with': 'fetch.1',
+                    'mode': 'no-cors'
+                }
+            }).then(function (response) {
+                return response.json();
+            }).then(function (data) {
+                for (let i = 0; i < data.length; i++) {
+                    for (let j = 0; j < 11; j++) {
+                        document.getElementById('listedItems').innerText += ` ${data[i][j]}`;
+                    }
+                    document.getElementById('listedItems').innerText += `\n\n`;
+                }
+            }).catch(function (error) {
+                console.log(error);
+            });
         });
     }
 
@@ -86,7 +99,7 @@ export default class EventHandler {
         formData.append('isTitle1', this.title1);
         formData.append('isTitle9', this.title9);
         formData.append('is31a', this.thirtyOneA);
-        fetch(`https://127.0.0.1/`, {
+        fetch(`https://localhost`, {
             method: 'POST',
             body: formData,
             headers: {
@@ -100,6 +113,17 @@ export default class EventHandler {
             // console.log(err);
         });
         document.getElementById('itemEntryForm').reset();
+    }
+
+    static setDivDisplay(div1, div2) {
+        const DIVS = [`splashDiv`, `splashScanDiv`, `scannerDiv`, `itemEntryDiv`, `itemListDiv`, `scanResultsExistsDiv`, `scanResultsNotExistDiv`, `itemFindDiv`, `doneDiv`];
+        for (let index in DIVS) {
+            if (div1 === DIVS[index] || div2 === DIVS[index]) {
+                document.getElementById(DIVS[index]).style.display = `block`;
+            } else {
+                document.getElementById(DIVS[index]).style.display = `none`;
+            }
+        }
     }
 
     handleCamera() {

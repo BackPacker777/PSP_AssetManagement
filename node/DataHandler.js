@@ -53,8 +53,18 @@ class DataHandler {
         );
     }
 
+    getAllItems(callback) {
+        this.db.all(`SELECT * FROM psp_assets`, function(err, rows) {
+            let data = [];
+            rows.forEach(function (row) {
+                data.push([row.maker,row.model,row.tag,row.sn,row.type,row.description,row.warranty,row.purchaseDate,row.isTitle1,row.isTitle9,row.is31a]);
+            });
+            callback(data);
+        });
+    }
+
     queryData(assetTag) {
-        this.db.get(`SELECT * FROM assets WHERE tag = assetTag`, (error, row) => {
+        this.db.get(`SELECT * FROM psp_assets WHERE tag = assetTag`, (error, row) => {
             if (row) {
                 console.log(`TRUE`);
             } else {

@@ -10,7 +10,7 @@ class Main {
         new SplashEventHandler();
         // document.getElementById("weekDay").innerText = `${this.date.getMonth() + 1}/${this.date.getDate()}/${this.date.getFullYear()}`;
         this.prepUX();
-        Main.loadServiceWorker();
+        // Main.loadServiceWorker();
         Main.handleManifest();
     }
 
@@ -23,6 +23,7 @@ class Main {
         document.getElementById(`scanResultsExistsDiv`).style.display = `none`;
         document.getElementById(`scanResultsNotExistDiv`).style.display = `none`;
         document.getElementById(`itemFindDiv`).style.display = `none`;
+        document.getElementById(`doneDiv`).style.display = `none`;
     }
 
     static loadServiceWorker() {

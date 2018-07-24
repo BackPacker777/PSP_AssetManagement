@@ -53,6 +53,11 @@ class app {
                     }).on('end', () => {
                         this.data_handler.insertRow(formData);
                     });
+                } else if (request.headers['x-requested-with'] === 'fetch.1') {
+                    this.data_handler.getAllItems(function (fetchedData) {
+                        response.writeHead(200, {'content-type': 'text/plain'});
+                        response.end(JSON.stringify(fetchedData));
+                    });
                 } else {
                     console.log(`Yo, somethings super wrong BDH!`);
                 }
