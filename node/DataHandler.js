@@ -57,7 +57,9 @@ class DataHandler {
         this.db.all(`SELECT * FROM psp_assets`, function(err, rows) {
             let data = [];
             rows.forEach(function (row) {
-                data.push([row.maker,row.model,row.tag,row.sn,row.type,row.description,row.warranty,row.purchaseDate,row.isTitle1,row.isTitle9,row.is31a]);
+                // Uncomment line below if you want to return more item info
+                // data.push([row.maker,row.model,row.tag,row.sn,row.type,row.description,row.warranty,row.purchaseDate,row.isTitle1,row.isTitle9,row.is31a]);
+                data.push([row.maker,row.model,row.tag,row.sn]);
             });
             callback(data);
         });

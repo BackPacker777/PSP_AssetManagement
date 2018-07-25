@@ -74,11 +74,28 @@ export default class EventHandler {
             }).then(function (response) {
                 return response.json();
             }).then(function (data) {
+                const MD_COLUMNS = 4;
                 for (let i = 0; i < data.length; i++) {
-                    for (let j = 0; j < 11; j++) {
-                        document.getElementById('listedItems').innerText += ` ${data[i][j]}`;
+                    let newRow = document.createElement('div');
+                    newRow.setAttribute('class','grid-x grid-padding-x grid-padding-y');
+                    let newCell1 = document.createElement('div');
+                    newCell1.setAttribute('class','cell small-1 large-1');
+                    let newCell2 = document.createElement('div');
+                    newCell2.setAttribute('class','cell small-11 large-11');
+                    newCell2.setAttribute('id',`listItem${i}`);
+                    let newItemCheck = document.createElement('input');
+                    newItemCheck.setAttribute('type','checkbox');
+                    newItemCheck.setAttribute('id',`itemCheck${i}`);
+                    newCell1.appendChild(newItemCheck);
+                    document.getElementById('listedItems').appendChild(newRow);
+                    newRow.appendChild(newCell1);
+                    newItemCheck.addEventListener('click', () => {
+                        EventHandler.setDivDisplay(`itemListDiv`, `doneDiv`, `itemDeleteDiv`);
+                    });
+                    newRow.appendChild(newCell2);
+                    for (let j = 0; j < MD_COLUMNS; j++) {
+                        document.getElementById(`listItem${i}`).innerText += ` ${data[i][j]}`;
                     }
-                    document.getElementById('listedItems').innerText += `\n\n`;
                 }
             }).catch(function (error) {
                 console.log(error);
@@ -115,10 +132,10 @@ export default class EventHandler {
         document.getElementById('itemEntryForm').reset();
     }
 
-    static setDivDisplay(div1, div2) {
-        const DIVS = [`splashDiv`, `splashScanDiv`, `scannerDiv`, `itemEntryDiv`, `itemListDiv`, `scanResultsExistsDiv`, `scanResultsNotExistDiv`, `itemFindDiv`, `doneDiv`];
+    static setDivDisplay(div1, div2, div3) {
+        const DIVS = [`itemDeleteDiv`, `splashDiv`, `splashScanDiv`, `scannerDiv`, `itemEntryDiv`, `itemListDiv`, `scanResultsExistsDiv`, `scanResultsNotExistDiv`, `itemFindDiv`, `doneDiv`];
         for (let index in DIVS) {
-            if (div1 === DIVS[index] || div2 === DIVS[index]) {
+            if (div1 === DIVS[index] || div2 === DIVS[index] || div3 === DIVS[index]) {
                 document.getElementById(DIVS[index]).style.display = `block`;
             } else {
                 document.getElementById(DIVS[index]).style.display = `none`;
