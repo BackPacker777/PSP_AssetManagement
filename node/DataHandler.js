@@ -65,6 +65,13 @@ class DataHandler {
         });
     }
 
+    deleteItems(items) {
+        items = JSON.parse(items);
+        for (let item of items) {
+            this.db.run(`DELETE FROM psp_assets where tag = ?`, [item]);
+        }
+    }
+
     queryData(assetTag) {
         this.db.get(`SELECT * FROM psp_assets WHERE tag = assetTag`, (error, row) => {
             if (row) {
@@ -78,20 +85,6 @@ class DataHandler {
     static renderDom(path, contentType, callback, encoding) {
         FS.readFile(path, encoding ? encoding : `utf-8`, (error, string) => {
             callback(error, string, contentType);
-        });
-    }
-
-    static setBaseData(callback) {
-        let filePath = `data/ZipCodeDB.csv`, columns = 3;
-        FS.readFile(filePath, `utf8`, (err, file) => {
-            let tempArray, finalData = [];
-            tempArray = file.split(/\r?\n/); //remove newlines
-            for (let i = 0; i < tempArray.length; i++) {
-                finalData[i] = tempArray[i].split(/,/).slice(0, columns);
-            }
-            finalData = JSON.stringify(finalData);
-            callback(finalData);
-            return finalData;
         });
     }
 

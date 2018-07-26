@@ -62,7 +62,12 @@ export default class EventHandler {
         });
     }
 
-    handleItemList() {
+    handleItemList(message) {
+        if (message) {
+            console.log(message);
+        }
+        document.getElementById('listedItems').innerHTML = ``;
+        let self = this;
         document.getElementById(`itemListBtn`).addEventListener(`click`, () => {
             EventHandler.setDivDisplay(`itemListDiv`, `doneDiv`);
             fetch(document.url, {
@@ -75,6 +80,7 @@ export default class EventHandler {
                 return response.json();
             }).then(function (data) {
                 const MD_COLUMNS = 4;
+                let itemDeleteList = [];
                 for (let i = 0; i < data.length; i++) {
                     let newRow = document.createElement('div');
                     newRow.setAttribute('class','grid-x grid-padding-x grid-padding-y');
@@ -86,11 +92,29 @@ export default class EventHandler {
                     let newItemCheck = document.createElement('input');
                     newItemCheck.setAttribute('type','checkbox');
                     newItemCheck.setAttribute('id',`itemCheck${i}`);
+                    newItemCheck.setAttribute('name','itemCheck');
                     newCell1.appendChild(newItemCheck);
                     document.getElementById('listedItems').appendChild(newRow);
                     newRow.appendChild(newCell1);
                     newItemCheck.addEventListener('click', () => {
-                        EventHandler.setDivDisplay(`itemListDiv`, `doneDiv`, `itemDeleteDiv`);
+                        let tempArray = [];
+                        let itemChecks = document.forms['listedItems'].elements['itemCheck'];
+                        const TAG_COLUMN = 2;
+                        for (let i = 0; i < itemChecks.length; i++) {
+                            if (itemChecks[i].checked) {
+                                tempArray.push(data[i][TAG_COLUMN]);
+                            }
+                        }
+                        itemDeleteList.length = 0;
+                        itemDeleteList = tempArray.slice(0); // https://davidwalsh.name/javascript-clone-array
+                        tempArray.length = 0;
+                        if (itemDeleteList.length > 0) {
+                            // console.log(itemDeleteList);
+                            self.handleItemDelete(itemDeleteList);
+                            EventHandler.setDivDisplay(`itemListDiv`, `doneDiv`, `itemDeleteDiv`);
+                        } else {
+                            EventHandler.setDivDisplay(`itemListDiv`, `doneDiv`);
+                        }
                     });
                     newRow.appendChild(newCell2);
                     for (let j = 0; j < MD_COLUMNS; j++) {
@@ -100,6 +124,25 @@ export default class EventHandler {
             }).catch(function (error) {
                 console.log(error);
             });
+        });
+    }
+
+    handleItemDelete(itemDeleteList) {
+        document.getElementById('itemDeleteBtn').addEventListener('click', () => {
+            fetch(`https://localhost`, {
+                    method: 'POST',
+                    body: JSON.stringify(itemDeleteList),
+                    headers: {
+                        'x-requested-with': 'fetch.2',
+                        'mode': 'no-cors'
+                    }
+                }).then((response) => {
+                    console.log(response.text());
+                    return response.json();
+                }).catch((err) => {
+                    // console.log(err);
+                });
+            return this.handleItemList(`Here's your message!`);
         });
     }
 

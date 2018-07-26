@@ -58,6 +58,14 @@ class app {
                         response.writeHead(200, {'content-type': 'text/plain'});
                         response.end(JSON.stringify(fetchedData));
                     });
+                } else if (request.headers['x-requested-with'] === 'fetch.2') {
+                    let body = [];
+                    request.on('data', (chunk) => {
+                        body.push(chunk);
+                    }).on('end', () => {
+                        body = Buffer.concat(body).toString();
+                        this.data_handler.deleteItems(body);
+                    });
                 } else {
                     console.log(`Yo, somethings super wrong BDH!`);
                 }
