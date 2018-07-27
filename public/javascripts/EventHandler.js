@@ -1,6 +1,6 @@
 "use strict";
 
-import BCScan from './BCScan.js';
+import BCScan from './BCScan.js';;
 
 export default class EventHandler {
     constructor() {
