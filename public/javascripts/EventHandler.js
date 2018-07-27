@@ -52,6 +52,7 @@ export default class EventHandler {
 
     handleDone() {
         document.getElementById(`doneBtn`).addEventListener(`click`, () => {
+            document.getElementById('listedItems').innerHTML = ``;
             EventHandler.setDivDisplay(`splashDiv`, `splashScanDiv`);
         });
     }
@@ -59,14 +60,11 @@ export default class EventHandler {
     handleItemFind() {
         document.getElementById(`itemFindBtn`).addEventListener(`click`, () => {
             EventHandler.setDivDisplay(`itemFindDiv`);
+            this.handleItemFindSubmit();
         });
     }
 
-    handleItemList(message) {
-        if (message) {
-            console.log(message);
-        }
-        document.getElementById('listedItems').innerHTML = ``;
+    handleItemList() {
         let self = this;
         document.getElementById(`itemListBtn`).addEventListener(`click`, () => {
             EventHandler.setDivDisplay(`itemListDiv`, `doneDiv`);
@@ -79,52 +77,57 @@ export default class EventHandler {
             }).then(function (response) {
                 return response.json();
             }).then(function (data) {
-                const MD_COLUMNS = 4;
-                let itemDeleteList = [];
-                for (let i = 0; i < data.length; i++) {
-                    let newRow = document.createElement('div');
-                    newRow.setAttribute('class','grid-x grid-padding-x grid-padding-y');
-                    let newCell1 = document.createElement('div');
-                    newCell1.setAttribute('class','cell small-1 large-1');
-                    let newCell2 = document.createElement('div');
-                    newCell2.setAttribute('class','cell small-11 large-11');
-                    newCell2.setAttribute('id',`listItem${i}`);
-                    let newItemCheck = document.createElement('input');
-                    newItemCheck.setAttribute('type','checkbox');
-                    newItemCheck.setAttribute('id',`itemCheck${i}`);
-                    newItemCheck.setAttribute('name','itemCheck');
-                    newCell1.appendChild(newItemCheck);
-                    document.getElementById('listedItems').appendChild(newRow);
-                    newRow.appendChild(newCell1);
-                    newItemCheck.addEventListener('click', () => {
-                        let tempArray = [];
-                        let itemChecks = document.forms['listedItems'].elements['itemCheck'];
-                        const TAG_COLUMN = 2;
-                        for (let i = 0; i < itemChecks.length; i++) {
-                            if (itemChecks[i].checked) {
-                                tempArray.push(data[i][TAG_COLUMN]);
-                            }
-                        }
-                        itemDeleteList.length = 0;
-                        itemDeleteList = tempArray.slice(0); // https://davidwalsh.name/javascript-clone-array
-                        tempArray.length = 0;
-                        if (itemDeleteList.length > 0) {
-                            // console.log(itemDeleteList);
-                            self.handleItemDelete(itemDeleteList);
-                            EventHandler.setDivDisplay(`itemListDiv`, `doneDiv`, `itemDeleteDiv`);
-                        } else {
-                            EventHandler.setDivDisplay(`itemListDiv`, `doneDiv`);
-                        }
-                    });
-                    newRow.appendChild(newCell2);
-                    for (let j = 0; j < MD_COLUMNS; j++) {
-                        document.getElementById(`listItem${i}`).innerText += ` ${data[i][j]}`;
-                    }
-                }
+                self.listItems(data);
             }).catch(function (error) {
                 console.log(error);
             });
         });
+    }
+
+    listItems(data) {
+        let self = this;
+        const MD_COLUMNS = 4;
+        let itemDeleteList = [];
+        for (let i = 0; i < data.length; i++) {
+            let newRow = document.createElement('div');
+            newRow.setAttribute('class', 'grid-x grid-padding-x grid-padding-y');
+            let newCell1 = document.createElement('div');
+            newCell1.setAttribute('class', 'cell small-1 large-1');
+            let newCell2 = document.createElement('div');
+            newCell2.setAttribute('class', 'cell small-11 large-11');
+            newCell2.setAttribute('id', `listItem${i}`);
+            let newItemCheck = document.createElement('input');
+            newItemCheck.setAttribute('type', 'checkbox');
+            newItemCheck.setAttribute('id', `itemCheck${i}`);
+            newItemCheck.setAttribute('name', 'itemCheck');
+            newCell1.appendChild(newItemCheck);
+            document.getElementById('listedItems').appendChild(newRow);
+            newRow.appendChild(newCell1);
+            newItemCheck.addEventListener('click', () => {
+                let tempArray = [];
+                let itemChecks = document.forms['listedItems'].elements['itemCheck'];
+                const TAG_COLUMN = 2;
+                for (let i = 0; i < itemChecks.length; i++) {
+                    if (itemChecks[i].checked) {
+                        tempArray.push(data[i][TAG_COLUMN]);
+                    }
+                }
+                itemDeleteList.length = 0;
+                itemDeleteList = tempArray.slice(0); // https://davidwalsh.name/javascript-clone-array
+                tempArray.length = 0;
+                if (itemDeleteList.length > 0) {
+                    // console.log(itemDeleteList);
+                    self.handleItemDelete(itemDeleteList);
+                    EventHandler.setDivDisplay(`itemListDiv`, `doneDiv`, `itemDeleteDiv`);
+                } else {
+                    EventHandler.setDivDisplay(`itemListDiv`, `doneDiv`);
+                }
+            });
+            newRow.appendChild(newCell2);
+            for (let j = 0; j < MD_COLUMNS; j++) {
+                document.getElementById(`listItem${i}`).innerText += ` ${data[i][j]}`;
+            }
+        }
     }
 
     handleItemDelete(itemDeleteList) {
@@ -142,7 +145,34 @@ export default class EventHandler {
                 }).catch((err) => {
                     // console.log(err);
                 });
-            return this.handleItemList(`Here's your message!`);
+            document.getElementById('listedItems').innerHTML = ``;
+            document.getElementById(`itemListBtn`).click();
+        });
+    }
+
+    handleItemFindSubmit() {
+        let self = this;
+        document.getElementById('itemFindSubmit').addEventListener('click', () => {
+            document.getElementById('listedItems').innerHTML = ``;
+            EventHandler.setDivDisplay(`itemListDiv`, `doneDiv`);
+            let formData = new FormData();
+            formData.append('tag', document.getElementById('findItemAssetTag').value);
+            formData.append('maker', document.getElementById('findItemMaker').value);
+            formData.append('model', document.getElementById('findItemModel').value);
+            fetch(`https://localhost`, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'x-requested-with': 'fetch.3',
+                    'mode': 'no-cors'
+                }
+            }).then((response) => {
+                return response.json();
+            }).then((data) => {
+                self.listItems(data);
+            }).catch((err) => {
+                console.log(err);
+            });
         });
     }
 

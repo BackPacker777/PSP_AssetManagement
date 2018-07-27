@@ -23,7 +23,7 @@ class DataHandler {
             console.log(`Connected to Sqlite3 DB`);
         });
         this.db.run(`CREATE TABLE IF NOT EXISTS psp_assets (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,
         maker TEXT,
         model TEXT,
         tag INTEGER,
@@ -70,14 +70,19 @@ class DataHandler {
         for (let item of items) {
             this.db.run(`DELETE FROM psp_assets where tag = ?`, [item]);
         }
+        this.db.close();
     }
 
-    queryData(assetTag) {
-        this.db.get(`SELECT * FROM psp_assets WHERE tag = assetTag`, (error, row) => {
-            if (row) {
-                console.log(`TRUE`);
+    queryData(itemAttributes, callback) {
+        this.db.all(`SELECT * FROM psp_assets WHERE tag = ? OR maker = ? OR model = ?`, [itemAttributes.tag,itemAttributes.maker,itemAttributes.model], function(error, rows) {
+            if (error) {
+                console.log(error);
             } else {
-                console.log(`FALSE`);
+                let data = [];
+                rows.forEach(function (row) {
+                    data.push([row.maker,row.model,row.tag,row.sn]);
+                });
+                callback(data);
             }
         });
     }

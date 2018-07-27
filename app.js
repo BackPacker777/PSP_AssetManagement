@@ -66,6 +66,18 @@ class app {
                         body = Buffer.concat(body).toString();
                         this.data_handler.deleteItems(body);
                     });
+                } else if (request.headers['x-requested-with'] === 'fetch.3') {
+                    let formData = {};
+                    new FORMIDABLE.IncomingForm().parse(request).on('field', (field, name) => {
+                        formData[field] = name;
+                    }).on('error', (err) => {
+                        next(err);
+                    }).on('end', () => {
+                        this.data_handler.queryData(formData, function(fetchedData) {
+                            response.writeHead(200, {'content-type': 'text/plain'});
+                            response.end(JSON.stringify(fetchedData));
+                        });
+                    });
                 } else {
                     console.log(`Yo, somethings super wrong BDH!`);
                 }
