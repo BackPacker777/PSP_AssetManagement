@@ -1,6 +1,6 @@
 {
     "name": "PSP Asset Manager",
-    "short_name": "psp_asset_manager",
+    "short_name": "psp_assets",
     "lang": "en-US",
     "start_url": "/",
     "icons": [
@@ -15,6 +15,8 @@
             "type": "image/png"
         }
     ],
+    "theme_color": "#2F3BA2",
+    "background_color": "#ffffff",
     "display": "standalone",
     "orientation": "portrait"
 }
