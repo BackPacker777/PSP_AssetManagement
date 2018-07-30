@@ -28,7 +28,7 @@ class app {
         // HTTPS.createServer(SSL_OPTIONS, (request, response) => {
         HTTP.createServer((request, response) => {
 
-            if (request.header('x-forwarded-proto') !== 'https') {
+            if (request.headers['x-forwarded-proto'] !== 'https') {
                 response.redirect(`https://${request.header('host')}${request.url}`);
             }
 
