@@ -33,15 +33,18 @@ class app {
                     response.writeHead(500, {'Content-Type': 'text/plain'});
                     response.end('An error has occurred: ' + error.message);
                 } else if (contentType.indexOf('css') >= 0 || contentType.indexOf('js') >= 0) {
+                    response.set('cache-control', 'max-age=86400');
                     response.writeHead(200, {'Content-Type': contentType});
                     response.end(string, 'utf-8');
                 } else if (contentType.indexOf('html') >= 0) {
+                    response.set('cache-control', 'max-age=86400');
                     response.writeHead(200, {'Content-Type': contentType});
                     response.end(EJS.render(string, {
                         data: this.ejsData,
                         filename: this.fileName
                     }));
                 } else {
+                    response.set('cache-control', 'max-age=86400');
                     response.writeHead(200, {'Content-Type': contentType});
                     response.end(string, 'binary');
                 }
@@ -59,6 +62,7 @@ class app {
                     });
                 } else if (request.headers['x-requested-with'] === 'fetch.1') {
                     this.data_handler.getAllItems(function (fetchedData) {
+                        response.set('cache-control', 'max-age=86400');
                         response.writeHead(200, {'content-type': 'text/plain'});
                         response.end(JSON.stringify(fetchedData));
                     });
@@ -78,6 +82,7 @@ class app {
                         next(err);
                     }).on('end', () => {
                         this.data_handler.queryData(formData, function(fetchedData) {
+                            response.set('cache-control', 'max-age=86400');
                             response.writeHead(200, {'content-type': 'text/plain'});
                             response.end(JSON.stringify(fetchedData));
                         });
