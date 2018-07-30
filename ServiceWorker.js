@@ -1,22 +1,23 @@
 const VERSION = 'v1.00';
 
 let cacheFirstFiles = [
-    '/public/views/index.ejs',
-    '/public/views/header.ejs',
-    '/public/views/footer.ejs',
-    '/public/views/BCReader.ejs',
-    '/public/views/itemEntry.ejs',
-    '/public/views/itemList.ejs',
-    '/public/views/splash.ejs',
-    '/public/views/scanResults.ejs',
-    '/public/views/itemFind.ejs',
-    '/public/css/foundation.min.css',
-    '/public/css/overrides.css',
-    '/public/javascripts/main.js',
-    '/public/javascripts/quagga.js',
-    '/public/javascripts/EventHandler.js',
-    '/public/javascripts/SplashEventHandler.js',
-    '/public/favicons/favicon.ico'
+    './',
+    /*'./public/views/index.ejs',
+    './public/views/header.ejs',
+    './public/views/footer.ejs',
+    './public/views/BCReader.ejs',
+    './public/views/itemEntry.ejs',
+    './public/views/itemList.ejs',
+    './public/views/splash.ejs',
+    './public/views/scanResults.ejs',
+    './public/views/itemFind.ejs',*/
+    './public/css/foundation.min.css',
+    './public/css/overrides.css',
+    './public/javascripts/main.js',
+    './public/javascripts/quagga.js',
+    './public/javascripts/EventHandler.js',
+    './public/javascripts/SplashEventHandler.js'
+    // './public/favicons/favicon.ico'
 ];
 
 let networkFirstFiles = [

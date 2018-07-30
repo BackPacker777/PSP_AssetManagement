@@ -1,7 +1,5 @@
 "use strict";
 
-import BCScan from './BCScan.js';;
-
 export default class EventHandler {
     constructor() {
         this.handleTitleCheckBoxes();
@@ -10,7 +8,6 @@ export default class EventHandler {
         this.handleItemFind();
         this.handleItemList();
         this.handleDone();
-        // this.handleCamera();
     }
 
     handleTitleCheckBoxes() {
@@ -39,8 +36,11 @@ export default class EventHandler {
 
     handleItemSubmit() {
         document.getElementById(`itemSubmit`).addEventListener(`click`, () => {
-            EventHandler.setDivDisplay(`splashDiv`, `splashScanDiv`);
-            this.sendFormData();
+            document.getElementById(`itemEntryForm`).addEventListener(`submit`, (event) => {
+                event.preventDefault();
+                EventHandler.setDivDisplay(`splashDiv`, `splashScanDiv`);
+                this.sendFormData();
+            });
         });
     }
 
@@ -53,6 +53,8 @@ export default class EventHandler {
     handleDone() {
         document.getElementById(`doneBtn`).addEventListener(`click`, () => {
             document.getElementById('listedItems').innerHTML = ``;
+            document.getElementById(`itemEntryForm`).reset();
+            document.getElementById(`itemFindForm`).reset();
             EventHandler.setDivDisplay(`splashDiv`, `splashScanDiv`);
         });
     }
@@ -85,48 +87,52 @@ export default class EventHandler {
     }
 
     listItems(data) {
-        let self = this;
-        const MD_COLUMNS = 4;
-        let itemDeleteList = [];
-        for (let i = 0; i < data.length; i++) {
-            let newRow = document.createElement('div');
-            newRow.setAttribute('class', 'grid-x grid-padding-x grid-padding-y');
-            let newCell1 = document.createElement('div');
-            newCell1.setAttribute('class', 'cell small-1 large-1');
-            let newCell2 = document.createElement('div');
-            newCell2.setAttribute('class', 'cell small-11 large-11');
-            newCell2.setAttribute('id', `listItem${i}`);
-            let newItemCheck = document.createElement('input');
-            newItemCheck.setAttribute('type', 'checkbox');
-            newItemCheck.setAttribute('id', `itemCheck${i}`);
-            newItemCheck.setAttribute('name', 'itemCheck');
-            newCell1.appendChild(newItemCheck);
-            document.getElementById('listedItems').appendChild(newRow);
-            newRow.appendChild(newCell1);
-            newItemCheck.addEventListener('click', () => {
-                let tempArray = [];
-                let itemChecks = document.forms['listedItems'].elements['itemCheck'];
-                const TAG_COLUMN = 2;
-                for (let i = 0; i < itemChecks.length; i++) {
-                    if (itemChecks[i].checked) {
-                        tempArray.push(data[i][TAG_COLUMN]);
+        if (data.length > 0) {
+            let self = this;
+            const MD_COLUMNS = 4;
+            let itemDeleteList = [];
+            for (let i = 0; i < data.length; i++) {
+                let newRow = document.createElement('div');
+                newRow.setAttribute('class', 'grid-x grid-padding-x grid-padding-y');
+                let newCell1 = document.createElement('div');
+                newCell1.setAttribute('class', 'cell small-1 large-1');
+                let newCell2 = document.createElement('div');
+                newCell2.setAttribute('class', 'cell small-11 large-11');
+                newCell2.setAttribute('id', `listItem${i}`);
+                let newItemCheck = document.createElement('input');
+                newItemCheck.setAttribute('type', 'checkbox');
+                newItemCheck.setAttribute('id', `itemCheck${i}`);
+                newItemCheck.setAttribute('name', 'itemCheck');
+                newCell1.appendChild(newItemCheck);
+                document.getElementById('listedItems').appendChild(newRow);
+                newRow.appendChild(newCell1);
+                newItemCheck.addEventListener('click', () => {
+                    let tempArray = [];
+                    let itemChecks = document.forms['listedItems'].elements['itemCheck'];
+                    const TAG_COLUMN = 2;
+                    for (let i = 0; i < itemChecks.length; i++) {
+                        if (itemChecks[i].checked) {
+                            tempArray.push(data[i][TAG_COLUMN]);
+                        }
                     }
+                    itemDeleteList.length = 0;
+                    itemDeleteList = tempArray.slice(0); // https://davidwalsh.name/javascript-clone-array
+                    tempArray.length = 0;
+                    if (itemDeleteList.length > 0) {
+                        // console.log(itemDeleteList);
+                        self.handleItemDelete(itemDeleteList);
+                        EventHandler.setDivDisplay(`itemListDiv`, `doneDiv`, `itemDeleteDiv`);
+                    } else {
+                        EventHandler.setDivDisplay(`itemListDiv`, `doneDiv`);
+                    }
+                });
+                newRow.appendChild(newCell2);
+                for (let j = 0; j < MD_COLUMNS; j++) {
+                    document.getElementById(`listItem${i}`).innerText += ` ${data[i][j]}`;
                 }
-                itemDeleteList.length = 0;
-                itemDeleteList = tempArray.slice(0); // https://davidwalsh.name/javascript-clone-array
-                tempArray.length = 0;
-                if (itemDeleteList.length > 0) {
-                    // console.log(itemDeleteList);
-                    self.handleItemDelete(itemDeleteList);
-                    EventHandler.setDivDisplay(`itemListDiv`, `doneDiv`, `itemDeleteDiv`);
-                } else {
-                    EventHandler.setDivDisplay(`itemListDiv`, `doneDiv`);
-                }
-            });
-            newRow.appendChild(newCell2);
-            for (let j = 0; j < MD_COLUMNS; j++) {
-                document.getElementById(`listItem${i}`).innerText += ` ${data[i][j]}`;
             }
+        } else {
+            document.getElementById('listedItems').innerHTML = `<br><br><h1>Item does not exist in inventory.</h1>`;
         }
     }
 
@@ -214,25 +220,5 @@ export default class EventHandler {
                 document.getElementById(DIVS[index]).style.display = `none`;
             }
         }
-    }
-
-    handleCamera() {
-        const player = document.getElementById('player');
-        const canvas = document.getElementById('canvas');
-        const context = canvas.getContext('2d');
-        const captureButton = document.getElementById('capture');
-
-        const constraints = {
-            video: true,
-        };
-
-        captureButton.addEventListener('click', () => {
-            context.drawImage(player, 0, 0, canvas.width, canvas.height);
-            // player.srcObject.getVideoTracks().forEach(track => track.stop());
-        });
-        navigator.mediaDevices.getUserMedia(constraints)
-            .then((stream) => {
-                player.srcObject = stream;
-        });
     }
 }

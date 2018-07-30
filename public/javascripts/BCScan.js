@@ -16,8 +16,8 @@ export default class BCScan {
                 constraints: {
                     /*width: 480,
                     height: 320,*/
-                    width: 340,
-                    height: 250,
+                    width: 180,
+                    height: 320,
                     facingMode: "environment"
                 },
                 area: { // defines rectangle of the detection/localization area

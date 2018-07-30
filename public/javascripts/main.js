@@ -5,17 +5,14 @@ import SplashEventHandler from "./SplashEventHandler.js";
 
 class Main {
     constructor() {
-        this.date = new Date();
         new EventHandler();
         new SplashEventHandler();
-        // document.getElementById("weekDay").innerText = `${this.date.getMonth() + 1}/${this.date.getDate()}/${this.date.getFullYear()}`;
         this.prepUX();
-        // Main.loadServiceWorker();
+        Main.loadServiceWorker();
         Main.handleManifest();
     }
 
     prepUX() {
-        // document.getElementById(`camera`).style.display = `none`;
         document.getElementById(`splashDiv`).style.display = `block`;
         document.getElementById(`scannerDiv`).style.display = `none`;
         document.getElementById(`itemEntryDiv`).style.display = `none`;
@@ -31,9 +28,9 @@ class Main {
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/ServiceWorker.js')
                 .then((reg) => {
-                    console.log('Registration succeeded. Scope is ' + reg.scope);
+                    console.log('BDH ServiceWorker registration succeeded. Scope is ' + reg.scope);
                 }).catch((error) => {
-                console.log('Registration failed with ' + error);
+                    console.log('Registration failed with ' + error);
             });
         }
     }
@@ -46,20 +43,8 @@ class Main {
             btnAdd.style.display = 'block';
         });
     }
-
-    /*static async populateZips() {
-        const response = await fetch(`/data/ZipCodeDB.csv`, {
-            method: 'post',
-            headers: {'x-requested-with': 'fetch.0'}
-        });
-        return await response.text();
-    }*/
 }
 
 window.addEventListener('load', () => {
     new Main();
-    /*Main.populateZips().then((zips) => {
-        zips = JSON.parse(zips);
-        new Main(zips);
-    });*/
 });
