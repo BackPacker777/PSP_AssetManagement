@@ -28,6 +28,10 @@ class app {
         // HTTPS.createServer(SSL_OPTIONS, (request, response) => {
         HTTP.createServer((request, response) => {
 
+            if (request.header('x-forwarded-proto') !== 'https') {
+                response.redirect(`https://${request.header('host')}${request.url}`);
+            }
+
             let httpHandler = (error, string, contentType) => {
                 if (error) {
                     response.writeHead(500, {'Content-Type': 'text/plain'});
