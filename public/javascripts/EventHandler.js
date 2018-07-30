@@ -175,6 +175,7 @@ export default class EventHandler {
             }).then((response) => {
                 return response.json();
             }).then((data) => {
+                console.log(data);
                 self.listItems(data);
             }).catch((err) => {
                 console.log(err);
