@@ -138,7 +138,7 @@ export default class EventHandler {
 
     handleItemDelete(itemDeleteList) {
         document.getElementById('itemDeleteBtn').addEventListener('click', () => {
-            fetch(`https://localhost`, {
+            fetch(document.url, {
                     method: 'POST',
                     body: JSON.stringify(itemDeleteList),
                     headers: {
@@ -165,7 +165,7 @@ export default class EventHandler {
             formData.append('tag', document.getElementById('findItemAssetTag').value);
             formData.append('maker', document.getElementById('findItemMaker').value);
             formData.append('model', document.getElementById('findItemModel').value);
-            fetch(`https://localhost`, {
+            fetch(document.url, {
                 method: 'POST',
                 body: formData,
                 headers: {
@@ -196,7 +196,7 @@ export default class EventHandler {
         formData.append('isTitle1', this.title1);
         formData.append('isTitle9', this.title9);
         formData.append('is31a', this.thirtyOneA);
-        fetch(`https://localhost`, {
+        fetch(document.url, {
             method: 'POST',
             body: formData,
             headers: {
