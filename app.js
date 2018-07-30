@@ -16,7 +16,7 @@ class app {
     loadServer() {
         const HTTPS = require('https');
         const EJS = require('ejs');
-        const PORT = 443;
+        const PORT = process.env.PORT || 443;
         const SSL_OPTIONS = {
             key: this.data_handler.getKey(),
             cert: this.data_handler.getCert()

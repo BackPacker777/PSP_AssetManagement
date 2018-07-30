@@ -10,10 +10,13 @@
   },
   "author": "Howard Bates",
   "license": "MIT",
+  "engines": {
+    "node": ">= 10.0.0"
+  },
   "dependencies": {
     "ejs": "latest",
     "formidable": "latest",
     "quagga": "latest",
-    "sqlite3": "^4.0.2"
+    "sqlite3": "latest"
   }
 }
