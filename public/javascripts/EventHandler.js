@@ -206,8 +206,8 @@ export default class EventHandler {
         }).then((response) => {
             console.log(response.text());
             return response.json();
-        }).catch((err) => {
-            // console.log(err);
+        }).catch((errpr) => {
+            // console.log(error);
         });
         document.getElementById('itemEntryForm').reset();
     }
