@@ -15,7 +15,7 @@
             "type": "image/png"
         }
     ],
-    "theme_color": "#2F3BA2",
+    "theme_color": "",
     "background_color": "#ffffff",
     "display": "standalone",
     "orientation": "portrait"

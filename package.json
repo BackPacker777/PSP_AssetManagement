@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node bin/server",
     "build-css": "node-sass -w public/css/overrides.scss public/css/overrides.css",
+    "minify": "bin/minify",
     "_comment": "How to do node-css -> https://stackoverflow.com/a/31448585/466246 "
   },
   "author": "Howard Bates",

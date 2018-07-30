@@ -1,6 +1,6 @@
 "use strict";
 
-import BCScan from './BCScan.js';
+import BCScan from './BCScan.min.js';
 
 export default class SplashEventHandler {
     constructor() {
