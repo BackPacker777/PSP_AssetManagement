@@ -14,15 +14,19 @@ class app {
     }
 
     loadServer() {
-        const HTTPS = require('https');
+        // const HTTPS = require('https');
+        const HTTP = require('http');
         const EJS = require('ejs');
         const PORT = process.env.PORT || 443;
         const SSL_OPTIONS = {
             key: this.data_handler.getKey(),
-            cert: this.data_handler.getCert()
+            cert: this.data_handler.getCert(),
+            requestCert: true,
+            rejectUnauthorized: false
         };
 
-        HTTPS.createServer(SSL_OPTIONS, (request, response) => {
+        // HTTPS.createServer(SSL_OPTIONS, (request, response) => {
+        HTTP.createServer((request, response) => {
 
             let httpHandler = (error, string, contentType) => {
                 if (error) {
