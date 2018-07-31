@@ -42,15 +42,6 @@ class Main {
             e.preventDefault();
             deferredPrompt = event;
             document.getElementById(`installBanner`).style.display = 'block';
-            document.getElementById(`splashDiv`).style.display = `none`;
-            document.getElementById(`scannerDiv`).style.display = `none`;
-            document.getElementById(`itemEntryDiv`).style.display = `none`;
-            document.getElementById(`itemListDiv`).style.display = `none`;
-            document.getElementById(`scanResultsExistsDiv`).style.display = `none`;
-            document.getElementById(`scanResultsNotExistDiv`).style.display = `none`;
-            document.getElementById(`itemFindDiv`).style.display = `none`;
-            document.getElementById(`doneDiv`).style.display = `none`;
-            document.getElementById(`itemDeleteDiv`).style.display = `none`;
             document.getElementById(`installButton`).addEventListener('click', (event) => {
                 document.getElementById(`installBanner`).style.display = 'none';
                 deferredPrompt.prompt();
