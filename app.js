@@ -29,7 +29,8 @@ class app {
         HTTP.createServer((request, response) => {
 
             if (request.headers['x-forwarded-proto'] !== 'https') {
-                response.redirect(`https://${request.header('host')}${request.url}`);
+                // response.redirect(`https://${request.header('host')}${request.url}`);
+                response.redirect(`https://psp-assets.herokuapp.com/`);
             }
 
             let httpHandler = (error, string, contentType) => {
