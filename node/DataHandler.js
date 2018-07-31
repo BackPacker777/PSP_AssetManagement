@@ -10,8 +10,6 @@ class DataHandler {
         this.key = FS.readFileSync(`data/encryption/cert.key`);
         this.cert = FS.readFileSync(`data/encryption/cert.pem`);
         this.initDB();
-        // this.insertRow();
-        // this.queryData(123456);
         // this.db.close();
     }
 
