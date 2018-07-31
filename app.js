@@ -31,7 +31,7 @@ class app {
             let httpHandler = (error, string, contentType) => {
                 if (request.headers['x-forwarded-proto'] !== 'https') {
                     // response.redirect(`https://${request.header('host')}${request.url}`);
-                    response.writeHead(301, {Location: `https://${request.get('Host')}${request.url}`});
+                    response.writeHead(301, {Location: `https://${request.headers['host']}`});
                     response.end();
                 } else if (error) {
                     response.writeHead(500, {'Content-Type': 'text/plain'});
