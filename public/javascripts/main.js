@@ -37,13 +37,22 @@ class Main {
 
     static handleManifest() {
         let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            console.log(`Installation Banner Triggered!`)
+        window.addEventListener('beforeinstallprompt', (event) => {
+            console.log(`Installation Banner Triggered!`);
             e.preventDefault();
-            deferredPrompt = e;
-            btnAdd.style.display = 'block';
-            btnAdd.addEventListener('click', (e) => {
-                btnAdd.style.display = 'none';
+            deferredPrompt = event;
+            document.getElementById(`installBanner`).style.display = 'block';
+            document.getElementById(`splashDiv`).style.display = `none`;
+            document.getElementById(`scannerDiv`).style.display = `none`;
+            document.getElementById(`itemEntryDiv`).style.display = `none`;
+            document.getElementById(`itemListDiv`).style.display = `none`;
+            document.getElementById(`scanResultsExistsDiv`).style.display = `none`;
+            document.getElementById(`scanResultsNotExistDiv`).style.display = `none`;
+            document.getElementById(`itemFindDiv`).style.display = `none`;
+            document.getElementById(`doneDiv`).style.display = `none`;
+            document.getElementById(`itemDeleteDiv`).style.display = `none`;
+            document.getElementById(`installButton`).addEventListener('click', (event) => {
+                document.getElementById(`installBanner`).style.display = 'none';
                 deferredPrompt.prompt();
                 deferredPrompt.userChoice
                     .then((choiceResult) => {
