@@ -22,6 +22,7 @@ class Main {
         document.getElementById(`itemFindDiv`).style.display = `none`;
         document.getElementById(`doneDiv`).style.display = `none`;
         document.getElementById(`itemDeleteDiv`).style.display = `none`;
+        document.getElementById(`installBanner`).style.display = 'none';
     }
 
     static loadServiceWorker() {
