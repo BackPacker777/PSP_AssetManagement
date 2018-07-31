@@ -28,13 +28,13 @@ class app {
         // HTTPS.createServer(SSL_OPTIONS, (request, response) => {
         HTTP.createServer((request, response) => {
 
-            if (request.headers['x-forwarded-proto'] !== 'https') {
-                // response.redirect(`https://${request.header('host')}${request.url}`);
-                response.writeHead(301, {Location: `https://psp-assets.herokuapp.com/`});
-                response.end();
-            }
-
             let httpHandler = (error, string, contentType) => {
+                if (request.headers['x-forwarded-proto'] !== 'https') {
+                    // response.redirect(`https://${request.header('host')}${request.url}`);
+                    response.writeHead(301, {Location: `https://psp-assets.herokuapp.com/`});
+                    response.end();
+                }
+
                 if (error) {
                     response.writeHead(500, {'Content-Type': 'text/plain'});
                     response.end('An error has occurred: ' + error.message);
