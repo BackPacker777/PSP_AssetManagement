@@ -39,7 +39,7 @@ class Main {
         let deferredPrompt;
         window.addEventListener('beforeinstallprompt', (event) => {
             console.log(`Installation Banner Triggered!`);
-            e.preventDefault();
+            event.preventDefault();
             deferredPrompt = event;
             document.getElementById(`installBanner`).style.display = 'block';
             document.getElementById(`installButton`).addEventListener('click', (event) => {
