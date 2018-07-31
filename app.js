@@ -27,16 +27,13 @@ class app {
 
         // HTTPS.createServer(SSL_OPTIONS, (request, response) => {
         HTTP.createServer((request, response) => {
-            console.log(request.headers);
 
             let httpHandler = (error, string, contentType) => {
-                /*if (request.headers['x-forwarded-proto'] !== 'https') {
+                if (request.headers['x-forwarded-proto'] !== 'https') {
                     // response.redirect(`https://${request.header('host')}${request.url}`);
                     response.writeHead(301, {Location: `https://psp-assets.herokuapp.com/`});
                     response.end();
-                }*/
-
-                if (error) {
+                } else if (error) {
                     response.writeHead(500, {'Content-Type': 'text/plain'});
                     response.end('An error has occurred: ' + error.message);
                 } else if (contentType.indexOf('css') >= 0 || contentType.indexOf('js') >= 0) {
