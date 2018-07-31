@@ -30,7 +30,8 @@ class app {
 
             if (request.headers['x-forwarded-proto'] !== 'https') {
                 // response.redirect(`https://${request.header('host')}${request.url}`);
-                response.redirect(`https://psp-assets.herokuapp.com/`);
+                response.writeHead(301, {Location: `https://psp-assets.herokuapp.com/`});
+                response.end();
             }
 
             let httpHandler = (error, string, contentType) => {
