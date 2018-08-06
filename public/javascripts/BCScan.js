@@ -29,13 +29,13 @@ export default class BCScan {
             },
             decoder: {
                 readers: [
-                    "ean_reader"
-                    /*"upc_reader"
+                    /*"ean_reader"
+                    "upc_reader"
                     "code_128_reader",
-                    "ean_8_reader",
+                    "ean_8_reader",*/
                     "code_39_reader",
                     "code_39_vin_reader",
-                    "codabar_reader",
+                    /*"codabar_reader",
                     "upc_e_reader",
                     "i2of5_reader"*/
                 ]/*,
