@@ -1,4 +1,4 @@
-const VERSION = 'v1.00';
+const VERSION = 'v1.01';
 
 let cacheFirstFiles = [
     './',
