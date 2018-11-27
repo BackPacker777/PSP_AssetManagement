@@ -1,1 +1,0 @@
-node-sass -w public/css/overrides.scss public/css/overrides.css

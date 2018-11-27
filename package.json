@@ -2,9 +2,9 @@
   "name": "PSP_AssetManagerApp",
   "version": "0.0.1",
   "description": "PSP Asset Management App",
-  "main": "bin/server",
+  "main": "bin/asset_server",
   "scripts": {
-    "start": "node bin/server",
+    "start": "node bin/asset_server",
     "build-css": "node-sass -w public/css/overrides.scss public/css/overrides.css",
     "minify": "bin/minify",
     "_comment": "How to do node-css -> https://stackoverflow.com/a/31448585/466246 "
@@ -12,12 +12,25 @@
   "author": "Howard Bates",
   "license": "MIT",
   "engines": {
-    "node": ">= 10.0.0"
+    "node": ">= 11.2.0"
   },
   "dependencies": {
     "ejs": "latest",
     "formidable": "latest",
     "quagga": "latest",
     "sqlite3": "latest"
-  }
+  },
+  "bin": {
+    "PSP_AssetManagerApp": "asset_server"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BackPacker777/PSP_AssetManagement.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/BackPacker777/PSP_AssetManagement/issues"
+  },
+  "homepage": "https://github.com/BackPacker777/PSP_AssetManagement#readme"
 }

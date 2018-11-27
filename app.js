@@ -1,5 +1,3 @@
-// todo:
-
 "use strict";
 
 const DATA_HANDLER = require('./node/DataHandler');
