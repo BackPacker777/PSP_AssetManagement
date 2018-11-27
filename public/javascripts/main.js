@@ -1,7 +1,7 @@
 "use strict";
 
-import EventHandler from './EventHandler.min.js';
-import SplashEventHandler from "./SplashEventHandler.min.js";
+import EventHandler from './EventHandler.js';
+import SplashEventHandler from "./SplashEventHandler.js";
 
 class Main {
     constructor() {
