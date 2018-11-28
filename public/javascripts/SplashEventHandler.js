@@ -1,6 +1,6 @@
 "use strict";
 
-import BCScan from './BCScan.min.js';
+import BCScan from './BCScan.js';
 
 export default class SplashEventHandler {
     constructor() {
@@ -22,7 +22,7 @@ export default class SplashEventHandler {
 
     handleSplashScanBtn() {
         document.getElementById(`splashScanBtn`).addEventListener(`click`, () => {
-            this.BCScan = new BCScan();
+            new BCScan();
             document.getElementById(`splashScanDiv`).style.display = `none`;
             document.getElementById(`scannerDiv`).style.display = `block`;
         });

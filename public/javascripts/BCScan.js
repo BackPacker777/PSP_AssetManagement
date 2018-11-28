@@ -1,7 +1,5 @@
 "use strict";
 
-// const Quagga = require('quagga').default;
-
 export default class BCScan {
     constructor() {
         BCScan.startBCScanner();
@@ -17,8 +15,8 @@ export default class BCScan {
                 constraints: {
                     /*width: 480,
                     height: 320,*/
-                    width: 180,
-                    height: 320,
+                    width: 500,
+                    height: 200,
                     facingMode: "environment"
                 },
                 area: { // defines rectangle of the detection/localization area
@@ -31,13 +29,13 @@ export default class BCScan {
             decoder: {
                 readers: [
                     // "ean_reader",
-                    "upc_reader",
-                    "code_128_reader",
+                    // "upc_reader",
+                    "code_128_reader"
                     // "ean_8_reader",
                     // "code_39_reader",
                     // "code_39_vin_reader",
                     // "codabar_reader",
-                    "upc_e_reader",
+                    // "upc_e_reader",
                     // "i2of5_reader"
                 ]/*,
                 debug: {
@@ -94,7 +92,7 @@ export default class BCScan {
 
         Quagga.onDetected(function (result) {
             let getThisValueFromSQL = 0;
-            if (result.codeResult.code !== getThisValueFromSQL) {
+            if (Number(result.codeResult.code) !== getThisValueFromSQL) {
                 Quagga.stop();
                 document.getElementById(`splashDiv`).style.display = `none`;
                 document.getElementById(`splashScanDiv`).style.display = `none`;
