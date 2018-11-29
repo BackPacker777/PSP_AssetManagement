@@ -15,7 +15,7 @@ export default class BCScan {
                 constraints: {
                     /*width: 480,
                     height: 320,*/
-                    width: 400,
+                    width: 372,
                     height: 200,
                     facingMode: "environment"
                 },
