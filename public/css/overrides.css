@@ -65,14 +65,14 @@ textarea {
 
 #scanner-container {
   position: relative;
-  height: 250px;
-  width: 340px;
+  height: 200px;
+  width: 500px;
   margin: 0 auto; }
 
 #scanner-container > canvas {
   position: absolute;
-  height: 250px;
-  width: 340px;
+  height: 200px;
+  width: 500px;
   margin: auto;
   top: 0;
   right: 0;

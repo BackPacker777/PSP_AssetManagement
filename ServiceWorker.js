@@ -1,4 +1,4 @@
-const VERSION = 'v1.02';
+const VERSION = 'v1.10';
 
 let cacheFirstFiles = [
     './',
@@ -12,11 +12,11 @@ let cacheFirstFiles = [
     './public/views/itemFind.ejs',
     './public/css/foundation.min.css',
     './public/css/overrides.css',
-    './public/javascripts/main.min.js',
-    './public/javascripts/quagga.min.js',
-    './public/javascripts/EventHandler.min.js',
-    './public/javascripts/SplashEventHandler.min.js',
-    './public/javascripts/BCScan.min.js',
+    './public/javascripts/main.js',
+    './public/javascripts/quagga.js',
+    './public/javascripts/EventHandler.js',
+    './public/javascripts/SplashEventHandler.js',
+    './public/javascripts/BCScan.js',
     './public/favicons/favicon.ico'
 ];
 
