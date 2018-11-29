@@ -24,7 +24,7 @@ export default class SplashEventHandler {
         document.getElementById(`splashScanBtn`).addEventListener(`click`, () => {
             new BCScan();
             document.getElementById(`splashScanDiv`).style.display = `none`;
-            document.getElementById(`scannerDiv`).style.display = `block`;
+            document.getElementById(`scanner-container`).style.display = `block`;
         });
     }
 }
