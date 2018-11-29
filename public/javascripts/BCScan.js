@@ -96,7 +96,7 @@ export default class BCScan {
                 Quagga.stop();
                 document.getElementById(`splashDiv`).style.display = `none`;
                 document.getElementById(`splashScanDiv`).style.display = `none`;
-                document.getElementById(`scannerDiv`).style.display = `none`;
+                document.getElementById(`scanner-container`).style.display = `none`;
                 document.getElementById(`scanResultsNotExistDiv`).style.display = `block`;
                 document.getElementById(`barCode`).innerText = result.codeResult.code;
                 document.getElementById(`assetTag`).value = result.codeResult.code;
@@ -104,7 +104,7 @@ export default class BCScan {
                 Quagga.stop();
                 document.getElementById(`splashDiv`).style.display = `none`;
                 document.getElementById(`splashScanDiv`).style.display = `none`;
-                document.getElementById(`scannerDiv`).style.display = `none`;
+                document.getElementById(`scanner-container`).style.display = `none`;
                 document.getElementById(`itemEntryDiv`).style.display = `block`;
             }
         });
