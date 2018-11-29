@@ -14,7 +14,7 @@ class Main {
 
     prepUX() {
         document.getElementById(`splashDiv`).style.display = `block`;
-        document.getElementById(`scannerContainer`).style.display = `none`;
+        document.getElementById(`scanner-container`).style.display = `none`;
         document.getElementById(`itemEntryDiv`).style.display = `none`;
         document.getElementById(`itemListDiv`).style.display = `none`;
         document.getElementById(`scanResultsExistsDiv`).style.display = `none`;
