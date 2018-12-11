@@ -212,8 +212,10 @@ export default class EventHandler {
     }
 
     static setDivDisplay(div1, div2, div3) {
-        const DIVS = [`itemDeleteDiv`, `splashDiv`, `splashScanDiv`, `scannerDiv`, `itemEntryDiv`, `itemListDiv`, `scanResultsExistsDiv`, `scanResultsNotExistDiv`, `itemFindDiv`, `doneDiv`];
+        const DIVS = [`itemDeleteDiv`,`splashDiv`,`splashScanDiv`,`itemEntryDiv`,`itemListDiv`,`scanResultsExistsDiv`,`scanResultsNotExistDiv`,`itemFindDiv`,`doneDiv`];
+        // const DIVS = [`itemDeleteDiv`,`splashDiv`,`splashScanDiv`,`scannerDiv`,`itemEntryDiv`,`itemListDiv`,`scanResultsExistsDiv`,`scanResultsNotExistDiv`,`itemFindDiv`,`doneDiv`];
         for (let index in DIVS) {
+            console.log(`${div1} ${div2} ${div3}`);
             if (div1 === DIVS[index] || div2 === DIVS[index] || div3 === DIVS[index]) {
                 document.getElementById(DIVS[index]).style.display = `block`;
             } else {

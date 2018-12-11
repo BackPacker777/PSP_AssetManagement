@@ -7,7 +7,7 @@ const SQL = require(`sqlite3`).verbose();
 
 class DataHandler {
     constructor() {
-        this.key = FS.readFileSync(`data/encryption/cert.key`);
+        this.key = FS.readFileSync(`data/encryption/key.pem`);
         this.cert = FS.readFileSync(`data/encryption/cert.pem`);
         this.initDB();
         // this.db.close();
@@ -92,7 +92,7 @@ class DataHandler {
     }
 
     getKey() {
-        return FS.readFileSync(`data/encryption/cert.key`);
+        return FS.readFileSync(`data/encryption/key.pem`);
     }
 
     getCert() {
