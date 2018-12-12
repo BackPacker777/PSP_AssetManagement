@@ -1,0 +1,40 @@
+// Winter Colors
+
+body {
+  background-image:
+    linear-gradient(
+      to bottom right,
+      white, rgb(232,232,232)
+    );
+}
+
+.label {
+  background-color: rgb(112,63,75);
+  width: 100%;
+}
+
+.button {
+  background-color: rgb(188,196,195);
+}
+
+.button:hover {
+  background-color: rgb(59,66,77);
+  transition: background-color 1.0s ease-out;
+}
+
+.success_bdh {
+  background-color: rgb(127,140,127);
+}
+
+.success_bdh:hover {
+  background-color: rgb(65,77,65);
+  transition: background-color 1.0s ease-out;
+}
+
+#header {
+  background-image:
+    linear-gradient(
+      to bottom right,
+      white, rgb(112,63,75)
+    );
+}

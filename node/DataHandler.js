@@ -30,6 +30,7 @@ class DataHandler {
         description TEXT,
         warranty INTEGER,
         purchaseDate INTEGER,
+        location TEXT,
         isTitle1 INTEGER DEFAULT 0,
         isTitle9 INTEGER DEFAULT 0,
         is31a INTEGER DEFAULT 0
@@ -40,9 +41,9 @@ class DataHandler {
     }
 
     insertRow(formData) {
-        this.db.run(`INSERT INTO psp_assets (maker,model,tag,sn,type,description,warranty,purchaseDate,isTitle1,isTitle9,is31a)
-         VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-            [formData.maker, formData.model, formData.tag, formData.sn, formData.type, formData.description, formData.warranty, formData.purchaseDate, formData.isTitle1, formData.isTitle9, formData.is31a],
+        this.db.run(`INSERT INTO psp_assets (maker,model,tag,sn,type,description,warranty,purchaseDate,location,isTitle1,isTitle9,is31a)
+         VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+            [formData.maker, formData.model, formData.tag, formData.sn, formData.type, formData.description, formData.warranty, formData.purchaseDate, formData.location, formData.isTitle1, formData.isTitle9, formData.is31a],
             function(err) {
                 if (err) {
                     return console.log(err.message);

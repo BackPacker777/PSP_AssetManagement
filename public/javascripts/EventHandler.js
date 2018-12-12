@@ -192,6 +192,7 @@ export default class EventHandler {
         formData.append('description', document.getElementById('itemDescription').value);
         formData.append('warranty', document.getElementById('itemWarranty').value);
         formData.append('purchaseDate', document.getElementById('purchaseDate').value);
+        formData.append('location', document.getElementById('itemLocation').value);
         formData.append('isTitle1', this.title1);
         formData.append('isTitle9', this.title9);
         formData.append('is31a', this.thirtyOneA);
