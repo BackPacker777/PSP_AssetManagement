@@ -12,8 +12,8 @@ class app {
     }
 
     loadServer() {
-        // const HTTPS = require('https');
-        const HTTP = require('http');
+        const HTTPS = require('https');
+        // const HTTP = require('http');
         const EJS = require('ejs');
         const PORT = process.env.PORT || 443;
         const SSL_OPTIONS = {
@@ -23,8 +23,8 @@ class app {
             rejectUnauthorized: false
         };
 
-        // HTTPS.createServer(SSL_OPTIONS, (request, response) => {
-        HTTP.createServer((request, response) => {
+        HTTPS.createServer(SSL_OPTIONS, async (request, response) => {
+        // HTTP.createServer(async (request, response) => {
 
             let httpHandler = (error, string, contentType) => {
                 /*if (request.headers['x-forwarded-proto'] !== 'https') {

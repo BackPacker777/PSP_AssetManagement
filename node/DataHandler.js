@@ -58,7 +58,7 @@ class DataHandler {
             rows.forEach(function (row) {
                 // Uncomment line below if you want to return more item info
                 // data.push([row.maker,row.model,row.tag,row.sn,row.type,row.description,row.warranty,row.purchaseDate,row.isTitle1,row.isTitle9,row.is31a]);
-                data.push([row.maker,row.model,row.tag,row.sn]);
+                data.push([row.maker,row.model,row.tag,row.sn,row.location]);
             });
             callback(data);
         });
