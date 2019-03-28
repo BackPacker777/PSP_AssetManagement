@@ -1,28 +1,4 @@
 @import url(foundation.min.css);
-body {
-  background-image: linear-gradient(to bottom right, white, #e8e8e8); }
-
-.label {
-  background-color: #703f4b;
-  width: 100%; }
-
-.button {
-  background-color: #bcc4c3; }
-
-.button:hover {
-  background-color: #3b424d;
-  transition: background-color 1.0s ease-out; }
-
-.success_bdh {
-  background-color: #7f8c7f; }
-
-.success_bdh:hover {
-  background-color: #414d41;
-  transition: background-color 1.0s ease-out; }
-
-#header {
-  background-image: linear-gradient(to bottom right, white, #703f4b); }
-
 #newSubmission #newHover {
   display: none; }
 

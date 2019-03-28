@@ -8,8 +8,8 @@ class Main {
         new EventHandler();
         new SplashEventHandler();
         this.prepUX();
-        Main.loadServiceWorker();
-        Main.handleManifest();
+        // Main.loadServiceWorker();
+        // Main.handleManifest();
     }
 
     prepUX() {
@@ -21,6 +21,7 @@ class Main {
         document.getElementById(`scanResultsNotExistDiv`).style.display = `none`;
         document.getElementById(`itemFindDiv`).style.display = `none`;
         document.getElementById(`doneDiv`).style.display = `none`;
+        document.getElementById(`itemEditDiv`).style.display = `none`;
         document.getElementById(`itemDeleteDiv`).style.display = `none`;
         document.getElementById(`installBanner`).style.display = 'none';
     }

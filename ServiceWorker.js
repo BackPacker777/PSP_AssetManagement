@@ -1,4 +1,4 @@
-const VERSION = 'v1.01';
+const VERSION = 'v1.02';
 
 const cacheResources = async () => {
     let cacheFilesFirst = [
@@ -24,15 +24,30 @@ const cacheResources = async () => {
     return cache.addAll(cacheFilesFirst);
 };
 
-self.addEventListener('install', (event) =>
-    event.waitUntil(cacheResources())
-);
+self.addEventListener('install', async (event) => {
+    event.waitUntil(cacheResources());
+    await self.skipWaiting();
+});
 
 const cachedResource = async (request) => {
     const cache = await caches.open(VERSION);
-    return await cache.match(request)
+    return await cache.match(request);
 };
 
-self.addEventListener('fetch', event =>
-    event.respondWith(cachedResource(event.request))
-);
+self.addEventListener('activate', async (event) => {
+    console.log(`SW activated:  ${event}`);
+    await self.clients.claim();
+});
+
+self.addEventListener('fetch', async (event) => {
+    console.log(`Fetch event: ${event.request.url}`);
+    await event.respondWith(cachedResource(event.request));
+});
+
+self.addEventListener('push', async (event) => {
+
+});
+
+self.addEventListener('sync', async (event) => {
+
+});

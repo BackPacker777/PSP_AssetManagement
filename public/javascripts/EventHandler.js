@@ -1,13 +1,18 @@
 "use strict";
 
+import Fader from './FadeStuff.js';
+
 export default class EventHandler {
     constructor() {
+        this.fader = new Fader();
         this.handleTitleCheckBoxes();
         this.handleItemSubmit();
         this.handleItemReScan();
         this.handleItemFind();
         this.handleItemList();
         this.handleDone();
+        this.handleForward();
+        this.handleBackward();
     }
 
     handleTitleCheckBoxes() {
@@ -36,17 +41,23 @@ export default class EventHandler {
 
     handleItemSubmit() {
         document.getElementById(`itemSubmit`).addEventListener(`click`, () => {
-            document.getElementById(`itemEntryForm`).addEventListener(`submit`, (event) => {
-                event.preventDefault();
-                EventHandler.setDivDisplay(`splashDiv`, `splashScanDiv`);
+            if (document.forms['itemEntryForm'].checkValidity()) {
                 this.sendFormData();
-            });
+                document.getElementById('happyFace').style.display = 'none';
+                this.fader.doFade('in', 'entryResult');
+                setTimeout(() => {
+                    document.getElementById('entryResult').style.display = 'none';
+                    this.fader.doFade('in', 'happyFace');
+                }, 2000);
+            } else {
+                document.forms['itemEntryForm'].reportValidity();
+            }
         });
     }
 
     handleItemReScan() {
         document.getElementById(`reScanBtn`).addEventListener(`click`, () => {
-            EventHandler.setDivDisplay(`splashDiv`, `splashScanDiv`);
+            EventHandler.setDivDisplay([`splashDiv`, `splashScanDiv`]);
         });
     }
 
@@ -55,13 +66,13 @@ export default class EventHandler {
             document.getElementById('listedItems').innerHTML = ``;
             document.getElementById(`itemEntryForm`).reset();
             document.getElementById(`itemFindForm`).reset();
-            EventHandler.setDivDisplay(`splashDiv`, `splashScanDiv`);
+            EventHandler.setDivDisplay([`splashDiv`, `splashScanDiv`]);
         });
     }
 
     handleItemFind() {
         document.getElementById(`itemFindBtn`).addEventListener(`click`, () => {
-            EventHandler.setDivDisplay(`itemFindDiv`);
+            EventHandler.setDivDisplay([`itemFindDiv`]);
             this.handleItemFindSubmit();
         });
     }
@@ -69,7 +80,8 @@ export default class EventHandler {
     handleItemList() {
         let self = this;
         document.getElementById(`itemListBtn`).addEventListener(`click`, () => {
-            EventHandler.setDivDisplay(`itemListDiv`, `doneDiv`);
+            EventHandler.setDivDisplay([`itemListDiv`, `doneDiv`, `itemEditDiv`]);
+            this.handleItemEdit();
             fetch(document.url, {
                 method: 'POST',
                 headers: {
@@ -121,9 +133,9 @@ export default class EventHandler {
                     if (itemDeleteList.length > 0) {
                         // console.log(itemDeleteList);
                         self.handleItemDelete(itemDeleteList);
-                        EventHandler.setDivDisplay(`itemListDiv`, `doneDiv`, `itemDeleteDiv`);
+                        EventHandler.setDivDisplay([`itemListDiv`, `doneDiv`, `itemDeleteDiv`]);
                     } else {
-                        EventHandler.setDivDisplay(`itemListDiv`, `doneDiv`);
+                        EventHandler.setDivDisplay([`itemListDiv`, `doneDiv`]);
                     }
                 });
                 newRow.appendChild(newCell2);
@@ -134,6 +146,12 @@ export default class EventHandler {
         } else {
             document.getElementById('listedItems').innerHTML = `<br><br><h1>Item does not exist in inventory.</h1>`;
         }
+    }
+
+    handleItemEdit(itemEditList) {
+        document.getElementById('itemEditBtn').addEventListener('click', () => {
+            EventHandler.setDivDisplay([`itemEntryDiv`, `doneDiv`]);
+        });
     }
 
     handleItemDelete(itemDeleteList) {
@@ -160,7 +178,7 @@ export default class EventHandler {
         let self = this;
         document.getElementById('itemFindSubmit').addEventListener('click', () => {
             document.getElementById('listedItems').innerHTML = ``;
-            EventHandler.setDivDisplay(`itemListDiv`, `doneDiv`);
+            EventHandler.setDivDisplay([`itemListDiv`, `doneDiv`]);
             let formData = new FormData();
             formData.append('tag', document.getElementById('findItemAssetTag').value);
             formData.append('maker', document.getElementById('findItemMaker').value);
@@ -206,22 +224,31 @@ export default class EventHandler {
         }).then((response) => {
             console.log(response.text());
             return response.json();
-        }).catch((errpr) => {
-            // console.log(error);
+        }).catch((error) => {
+            console.log(error);
         });
         document.getElementById('itemEntryForm').reset();
     }
 
-    static setDivDisplay(div1, div2, div3) {
-        const DIVS = [`itemDeleteDiv`,`splashDiv`,`splashScanDiv`,`itemEntryDiv`,`itemListDiv`,`scanResultsExistsDiv`,`scanResultsNotExistDiv`,`itemFindDiv`,`doneDiv`];
-        // const DIVS = [`itemDeleteDiv`,`splashDiv`,`splashScanDiv`,`scannerDiv`,`itemEntryDiv`,`itemListDiv`,`scanResultsExistsDiv`,`scanResultsNotExistDiv`,`itemFindDiv`,`doneDiv`];
-        for (let index in DIVS) {
-            console.log(`${div1} ${div2} ${div3}`);
-            if (div1 === DIVS[index] || div2 === DIVS[index] || div3 === DIVS[index]) {
-                document.getElementById(DIVS[index]).style.display = `block`;
-            } else {
-                document.getElementById(DIVS[index]).style.display = `none`;
-            }
+    handleForward() {
+        document.getElementById('forward').addEventListener('click', () => {
+
+        });
+    }
+
+    handleBackward() {
+        document.getElementById('backward').addEventListener('click', () => {
+
+        });
+    }
+
+    static setDivDisplay(divs) {
+        const DIVS = [`itemEditDiv`,`itemDeleteDiv`,`splashDiv`,`splashScanDiv`,`itemEntryDiv`,`itemListDiv`,`scanResultsExistsDiv`,`scanResultsNotExistDiv`,`itemFindDiv`,`doneDiv`, `entryResult`];
+        for (let index of DIVS) {
+            document.getElementById(index).style.display = `none`;
+        }
+        for (let div of divs) {
+            document.getElementById(div).style.display = `block`;
         }
     }
 }

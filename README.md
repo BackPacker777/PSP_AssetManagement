@@ -1,5 +1,6 @@
 ## Todo:
-* Add 'Update Item' functionality
+* Add 'edit/update item' functionality
+* Fix item find
 
 ## Completed:
 * ~~Working on Find Item ( 07/10/2018 )~~

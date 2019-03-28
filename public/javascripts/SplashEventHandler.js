@@ -15,7 +15,9 @@ export default class SplashEventHandler {
                 document.getElementById(`splashDiv`).style.display = `none`;
                 document.getElementById(`scanResultsExistsDiv`).style.display = `none`;
                 document.getElementById(`scanResultsNotExistDiv`).style.display = `none`;
+                document.getElementById(`entryResult`).style.display = `none`;
                 document.getElementById(`itemEntryDiv`).style.display = `block`;
+                document.getElementById(`doneDiv`).style.display = `block`;
             });
         }
     }
