@@ -77,13 +77,14 @@ class app {
                         this.data_handler.deleteAssets(body);
                     });
                 } else if (request.headers['x-requested-with'] === 'fetch.3') {
-                    let formData = {};
-                    new FORMIDABLE.IncomingForm().parse(request).on('field', (field, name) => {
-                        formData[field] = name;
+                    let body = [];
+                    request.on('data', (chunk) => {
+                        body.push(chunk);
                     }).on('error', (err) => {
                         next(err);
                     }).on('end', () => {
-                        this.data_handler.queryData(formData, function (fetchedData) {
+                        body = Buffer.concat(body).toString();
+                        this.data_handler.queryData(body, function (fetchedData) {
                             response.setHeader('Cache-Control', 'max-age=86400');
                             response.writeHead(200, {'content-type': 'text/plain'});
                             console.log(JSON.stringify(fetchedData));

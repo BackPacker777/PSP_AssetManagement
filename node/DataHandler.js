@@ -73,7 +73,7 @@ class DataHandler {
     }
 
     queryData(itemAttributes, callback) {
-        this.db.all(`SELECT * FROM psp_assets WHERE tag = ? OR maker = ? OR model = ?`, [itemAttributes.tag,itemAttributes.maker,itemAttributes.model], function(error, rows) {
+        this.db.all(`SELECT * FROM psp_assets WHERE tag = ? OR maker = ? OR model = ? OR location = ?`, [itemAttributes.tag,itemAttributes.maker,itemAttributes.model,itemAttributes.location], function(error, rows) {
             if (error) {
                 console.log(error);
             } else {

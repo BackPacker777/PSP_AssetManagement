@@ -19,7 +19,7 @@
     "formidable": "latest",
     "node-sass": "latest",
     "quagga": "latest",
-    "sqlite3": "latest"
+    "sqlite3": "^4.0.6"
   },
   "bin": {
     "PSP_AssetManagerApp": "asset_server"

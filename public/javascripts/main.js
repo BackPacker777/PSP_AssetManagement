@@ -21,7 +21,6 @@ class Main {
         document.getElementById(`scanResultsNotExistDiv`).style.display = `none`;
         document.getElementById(`assetFindDiv`).style.display = `none`;
         document.getElementById(`doneDiv`).style.display = `none`;
-        document.getElementById(`assetEditDiv`).style.display = `none`;
         document.getElementById(`assetDeleteDiv`).style.display = `none`;
         document.getElementById(`installBanner`).style.display = 'none';
 

@@ -6,15 +6,12 @@ export default class EventHandler {
     constructor() {
         this.fader = new Fader();
         this.handleAssetTag();
-        this.handleAssetMaker();
         this.handleTitleCheckBoxes();
         this.handleAssetSubmit();
         this.handleAssetReScan();
         this.handleAssetFind();
         this.handleAssetList();
         this.handleDone();
-        this.handleForward();
-        this.handleBackward();
     }
 
     populateAssetData(whichData, callback) {
@@ -36,10 +33,11 @@ export default class EventHandler {
 
     handleAssetTag() {
         const MAX_TAG = 99999999;
-        document.getElementById(`assetTag`).addEventListener(`blur`, () => {
+        document.getElementById(`assetTag`).addEventListener(`change`, () => {
             let tagValue = Number(document.getElementById(`assetTag`).value);
             if (tagValue > 0 && tagValue < MAX_TAG) {
                 document.getElementById(`assetMaker`).disabled = false;
+                this.handleAssetMaker();
             } else {
                 alert(`Invalid number, please re-enter.`);
                 document.getElementById(`assetMaker`).disabled = true;
@@ -167,15 +165,112 @@ export default class EventHandler {
 
     handleAssetFind() {
         document.getElementById(`assetFindBtn`).addEventListener(`click`, () => {
-            EventHandler.setDivDisplay([`assetFindDiv`]);
-            this.handleAssetFindSubmit();
+            EventHandler.setDivDisplay([`assetFindDiv`, `doneDiv`]);
+            this.populateAssetData(4, (assetData) => {
+                for (let i = 0; i < assetData.length; i++) {
+                    let option = document.createElement("option");
+                    option.text = assetData[i][0];
+                    option.value = assetData[i][0];
+                    document.getElementById("findAssetMaker").appendChild(option);
+                }
+            });
+            this.populateAssetData(5, (assetData) => {
+                for (let i = 1; i < assetData.length; i++) {
+                    for (let j = 1; j < assetData[i].length; j++) {
+                        let option = document.createElement("option");
+                        option.text = assetData[i][j];
+                        option.value = assetData[i][j];
+                        document.getElementById("findAssetModel").appendChild(option);
+                    }
+                }
+            });
+            let findData = null;
+            document.getElementById("findAssetMaker").addEventListener('change', () => {
+                let findAssetMaker = document.getElementById('findAssetMaker');
+                let findAssetMakerValue = findAssetMaker.options[findAssetMaker.selectedIndex].value;
+                if (findAssetMakerValue !== 'choose') {
+                    findData = findAssetMakerValue;
+                    document.getElementById("findAssetModel").disabled = true;
+                    document.getElementById("findAssetTag").disabled = true;
+                    document.getElementById("findAssetLocation").disabled = true;
+                } else {
+                    findData = null;
+                    document.getElementById("findAssetModel").disabled = false;
+                    document.getElementById("findAssetTag").disabled = false;
+                    document.getElementById("findAssetLocation").disabled = false;
+                }
+            });
+            document.getElementById("findAssetModel").addEventListener('change', () => {
+                let findAssetModel = document.getElementById('findAssetModel');
+                let findAssetModelValue = findAssetModel.options[findAssetModel.selectedIndex].value;
+                if (findAssetModelValue !== 'choose') {
+                    findData = findAssetModelValue;
+                    document.getElementById("findAssetMaker").disabled = true;
+                    document.getElementById("findAssetTag").disabled = true;
+                    document.getElementById("findAssetLocation").disabled = true;
+                } else {
+                    findData = null;
+                    document.getElementById("findAssetMaker").disabled = false;
+                    document.getElementById("findAssetTag").disabled = false;
+                    document.getElementById("findAssetLocation").disabled = false;
+                }
+            });
+            document.getElementById("findAssetTag").addEventListener('change', () => {
+                if (document.getElementById("findAssetTag").value) {
+                    findData = document.getElementById("findAssetTag").value;
+                    document.getElementById("findAssetModel").disabled = true;
+                    document.getElementById("findAssetMaker").disabled = true;
+                    document.getElementById("findAssetLocation").disabled = true;
+                } else {
+                    findData = null;
+                    document.getElementById("findAssetModel").disabled = false;
+                    document.getElementById("findAssetMaker").disabled = false;
+                    document.getElementById("findAssetLocation").disabled = false;
+                }
+            });
+            document.getElementById("findAssetLocation").addEventListener('change', () => {
+                if (document.getElementById("findAssetLocation").value) {
+                    findData = document.getElementById("findAssetLocation").value;
+                    document.getElementById("findAssetModel").disabled = true;
+                    document.getElementById("findAssetMaker").disabled = true;
+                    document.getElementById("findAssetTag").disabled = true;
+                } else {
+                    findData = null;
+                    document.getElementById("findAssetModel").disabled = false;
+                    document.getElementById("findAssetMaker").disabled = false;
+                    document.getElementById("findAssetTag").disabled = false;
+                }
+            });
+            this.handleAssetFindSubmit(findData);
+        });
+    }
+
+    handleAssetFindSubmit(findData) {
+        let self = this;
+        document.getElementById('assetFindSubmit').addEventListener('click', () => {
+            document.getElementById('listedAssets').innerHTML = ``;
+            EventHandler.setDivDisplay([`assetListDiv`, `doneDiv`]);
+            fetch(document.url, {
+                method: 'POST',
+                body: findData,
+                headers: {
+                    'x-requested-with': 'fetch.3',
+                    'mode': 'no-cors'
+                }
+            }).then((response) => {
+                return response.json();
+            }).then((data) => {
+                self.listAssets(data);
+            }).catch((err) => {
+                console.log(err);
+            });
         });
     }
 
     handleAssetList() {
         let self = this;
         document.getElementById(`assetListBtn`).addEventListener(`click`, () => {
-            EventHandler.setDivDisplay([`assetListDiv`, `doneDiv`, `assetEditDiv`]);
+            EventHandler.setDivDisplay([`assetListDiv`, `doneDiv`]);
             this.handleAssetEdit();
             fetch(document.url, {
                 method: 'POST',
@@ -201,37 +296,12 @@ export default class EventHandler {
             for (let i = 0; i < data.length; i++) {
                 let newRow = document.createElement('div');
                 newRow.setAttribute('class', 'grid-x grid-padding-x grid-padding-y');
-                let newCell1 = document.createElement('div');
-                newCell1.setAttribute('class', 'cell small-1 large-1');
                 let newCell2 = document.createElement('div');
-                newCell2.setAttribute('class', 'cell small-11 large-11');
+                newCell2.setAttribute('class', 'cell small-12 large-12');
                 newCell2.setAttribute('id', `listAsset${i}`);
-                let newAssetCheck = document.createElement('input');
-                newAssetCheck.setAttribute('type', 'checkbox');
-                newAssetCheck.setAttribute('id', `assetCheck${i}`);
-                newAssetCheck.setAttribute('name', 'assetCheck');
-                newCell1.appendChild(newAssetCheck);
                 document.getElementById('listedAssets').appendChild(newRow);
-                newRow.appendChild(newCell1);
-                newAssetCheck.addEventListener('click', () => {
-                    let tempArray = [];
-                    let assetChecks = document.forms['listedAssets'].elements['assetCheck'];
-                    const TAG_COLUMN = 2;
-                    for (let i = 0; i < assetChecks.length; i++) {
-                        if (assetChecks[i].checked) {
-                            tempArray.push(data[i][TAG_COLUMN]);
-                        }
-                    }
-                    assetDeleteList.length = 0;
-                    assetDeleteList = tempArray.slice(0); // https://davidwalsh.name/javascript-clone-array
-                    tempArray.length = 0;
-                    if (assetDeleteList.length > 0) {
-                        // console.log(assetDeleteList);
-                        self.handleAssetDelete(assetDeleteList);
-                        EventHandler.setDivDisplay([`assetListDiv`, `doneDiv`, `assetDeleteDiv`]);
-                    } else {
-                        EventHandler.setDivDisplay([`assetListDiv`, `doneDiv`]);
-                    }
+                newCell2.addEventListener('click', () => {
+                    alert('Editing item!');
                 });
                 newRow.appendChild(newCell2);
                 for (let j = 0; j < MD_COLUMNS; j++) {
@@ -243,10 +313,8 @@ export default class EventHandler {
         }
     }
 
-    handleAssetEdit(assetEditList) {
-        document.getElementById('assetEditBtn').addEventListener('click', () => {
-            EventHandler.setDivDisplay([`assetEntryDiv`, `doneDiv`]);
-        });
+    handleAssetEdit() {
+
     }
 
     handleAssetDelete(assetDeleteList) {
@@ -266,32 +334,6 @@ export default class EventHandler {
                 });
             document.getElementById('listedAssets').innerHTML = ``;
             document.getElementById(`assetListBtn`).click();
-        });
-    }
-
-    handleAssetFindSubmit() {
-        let self = this;
-        document.getElementById('assetFindSubmit').addEventListener('click', () => {
-            document.getElementById('listedAssets').innerHTML = ``;
-            EventHandler.setDivDisplay([`assetListDiv`, `doneDiv`]);
-            let formData = new FormData();
-            formData.append('tag', document.getElementById('findAssetAssetTag').value);
-            formData.append('maker', document.getElementById('findAssetMaker').value);
-            formData.append('model', document.getElementById('findAssetModel').value);
-            fetch(document.url, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'x-requested-with': 'fetch.3',
-                    'mode': 'no-cors'
-                }
-            }).then((response) => {
-                return response.json();
-            }).then((data) => {
-                self.listAssets(data);
-            }).catch((err) => {
-                console.log(err);
-            });
         });
     }
 
@@ -325,20 +367,8 @@ export default class EventHandler {
         document.getElementById('assetEntryForm').reset();
     }
 
-    handleForward() {
-        document.getElementById('forward').addEventListener('click', () => {
-
-        });
-    }
-
-    handleBackward() {
-        document.getElementById('backward').addEventListener('click', () => {
-
-        });
-    }
-
     static setDivDisplay(divs) {
-        const DIVS = [`assetEditDiv`,`assetDeleteDiv`,`splashDiv`,`splashScanDiv`,`assetEntryDiv`,`assetListDiv`,`scanResultsExistsDiv`,`scanResultsNotExistDiv`,`assetFindDiv`,`doneDiv`, `entryResult`];
+        const DIVS = [`assetDeleteDiv`,`splashDiv`,`splashScanDiv`,`assetEntryDiv`,`assetListDiv`,`scanResultsExistsDiv`,`scanResultsNotExistDiv`,`assetFindDiv`,`doneDiv`, `entryResult`];
         for (let index of DIVS) {
             document.getElementById(index).style.display = `none`;
         }

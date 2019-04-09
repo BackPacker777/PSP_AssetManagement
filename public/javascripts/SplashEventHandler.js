@@ -4,11 +4,11 @@ import BCScan from './BCScan.js';
 
 export default class SplashEventHandler {
     constructor() {
-        this.handleassetEntryBtn();
+        this.handleAssetEntryBtn();
         this.handleSplashScanBtn();
     }
 
-    handleassetEntryBtn() {
+    handleAssetEntryBtn() {
         let assetEntryButtons = document.getElementsByName("assetEntryBtn");
         for (let i = 0; i < assetEntryButtons.length; i++) {
             assetEntryButtons[i].addEventListener(`click`, () => {
