@@ -105,7 +105,7 @@ export default class BCScan {
                 document.getElementById(`splashDiv`).style.display = `none`;
                 document.getElementById(`splashScanDiv`).style.display = `none`;
                 document.getElementById(`scanner-container`).style.display = `none`;
-                document.getElementById(`itemEntryDiv`).style.display = `block`;
+                document.getElementById(`assetEntryDiv`).style.display = `block`;
             }
         });
     }

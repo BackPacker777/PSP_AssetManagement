@@ -17,7 +17,7 @@
   "dependencies": {
     "ejs": "latest",
     "formidable": "latest",
-    "node-sass": "^4.11.0",
+    "node-sass": "latest",
     "quagga": "latest",
     "sqlite3": "latest"
   },

@@ -4,19 +4,19 @@ import BCScan from './BCScan.js';
 
 export default class SplashEventHandler {
     constructor() {
-        this.handleItemEntryBtn();
+        this.handleassetEntryBtn();
         this.handleSplashScanBtn();
     }
 
-    handleItemEntryBtn() {
-        let itemEntryButtons = document.getElementsByName("itemEntryBtn");
-        for (let i = 0; i < itemEntryButtons.length; i++) {
-            itemEntryButtons[i].addEventListener(`click`, () => {
+    handleassetEntryBtn() {
+        let assetEntryButtons = document.getElementsByName("assetEntryBtn");
+        for (let i = 0; i < assetEntryButtons.length; i++) {
+            assetEntryButtons[i].addEventListener(`click`, () => {
                 document.getElementById(`splashDiv`).style.display = `none`;
                 document.getElementById(`scanResultsExistsDiv`).style.display = `none`;
                 document.getElementById(`scanResultsNotExistDiv`).style.display = `none`;
                 document.getElementById(`entryResult`).style.display = `none`;
-                document.getElementById(`itemEntryDiv`).style.display = `block`;
+                document.getElementById(`assetEntryDiv`).style.display = `block`;
                 document.getElementById(`doneDiv`).style.display = `block`;
             });
         }

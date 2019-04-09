@@ -52,7 +52,7 @@ class DataHandler {
         );
     }
 
-    getAllItems(callback) {
+    getAllAssets(callback) {
         this.db.all(`SELECT * FROM psp_assets`, function(err, rows) {
             let data = [];
             rows.forEach(function (row) {
@@ -64,9 +64,9 @@ class DataHandler {
         });
     }
 
-    deleteItems(items) {
-        items = JSON.parse(items);
-        for (let item of items) {
+    deleteAssets(assets) {
+        assets = JSON.parse(assets);
+        for (let item of assets) {
             this.db.run(`DELETE FROM psp_assets where tag = ?`, [item]);
         }
         this.db.close();
@@ -83,6 +83,23 @@ class DataHandler {
                 });
                 callback(data);
             }
+        });
+    }
+
+    static getAssetData(whichData, callback) {
+        let filePath;
+        if (whichData === "info") {
+            filePath = 'data/asset_info.csv';
+        } else {
+            filePath = 'data/asset_models.csv';
+        }
+        FS.readFile(filePath, 'utf8', (err, file) => {
+            let tempArray, finalData = [];
+            tempArray = file.split(/\r?\n/); //remove newlines
+            for (let i = 0; i < tempArray.length; i++) {
+                finalData[i] = tempArray[i].split(/,/);
+            }
+            callback(finalData);
         });
     }
 

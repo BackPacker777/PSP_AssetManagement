@@ -63,7 +63,7 @@ class app {
                         this.data_handler.insertRow(formData);
                     });
                 } else if (request.headers['x-requested-with'] === 'fetch.1') {
-                    this.data_handler.getAllItems(function (fetchedData) {
+                    this.data_handler.getAllAssets(function (fetchedData) {
                         response.setHeader('Cache-Control', 'max-age=86400');
                         response.writeHead(200, {'content-type': 'text/plain'});
                         response.end(JSON.stringify(fetchedData));
@@ -74,7 +74,7 @@ class app {
                         body.push(chunk);
                     }).on('end', () => {
                         body = Buffer.concat(body).toString();
-                        this.data_handler.deleteItems(body);
+                        this.data_handler.deleteAssets(body);
                     });
                 } else if (request.headers['x-requested-with'] === 'fetch.3') {
                     let formData = {};
@@ -83,12 +83,24 @@ class app {
                     }).on('error', (err) => {
                         next(err);
                     }).on('end', () => {
-                        this.data_handler.queryData(formData, function(fetchedData) {
+                        this.data_handler.queryData(formData, function (fetchedData) {
                             response.setHeader('Cache-Control', 'max-age=86400');
                             response.writeHead(200, {'content-type': 'text/plain'});
                             console.log(JSON.stringify(fetchedData));
                             response.end(JSON.stringify(fetchedData));
                         });
+                    });
+                } else if (request.headers['x-requested-with'] === 'fetch.4') {
+                    DATA_HANDLER.getAssetData('info', (assetData) => {
+                        assetData = JSON.stringify(assetData);
+                        response.writeHead(200, {'content-type': 'application/json'});
+                        response.end(assetData);
+                    });
+                }  else if (request.headers['x-requested-with'] === 'fetch.5') {
+                    DATA_HANDLER.getAssetData('models', (assetData) => {
+                        assetData = JSON.stringify(assetData);
+                        response.writeHead(200, {'content-type': 'application/json'});
+                        response.end(assetData);
                     });
                 } else {
                     console.log(`Yo, somethings super wrong BDH!`);
@@ -110,7 +122,7 @@ class app {
             } else {
                 DATA_HANDLER.renderDom(`HEY! What you're looking for: It's not here!`, 'text/html', httpHandler, 'utf-8');
             }
-        }).listen(PORT);
+        }).listen(PORT) && console.log(`____\nServer started & listening on port: ${PORT}\n____\n`);
     }
 }
 

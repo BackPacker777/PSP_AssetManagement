@@ -1792,7 +1792,7 @@ function topGeneric(list, top, scoreFunc) {
     for (i = 0; i < top; i++) {
         queue[i] = {
             score: 0,
-            item: null
+            asset: null
         };
     }
 
@@ -1801,7 +1801,7 @@ function topGeneric(list, top, scoreFunc) {
         if (score > min) {
             hit = queue[minIdx];
             hit.score = score;
-            hit.item = list[i];
+            hit.asset = list[i];
             min = Number.MAX_VALUE;
             for (pos = 0; pos < top; pos++) {
                 if (queue[pos].score < min) {
@@ -4047,9 +4047,9 @@ function adjustWorkerPool(capacity, cb) {
 
 function contains(codeResult, list) {
     if (list) {
-        return list.some(function (item) {
-            return Object.keys(item).every(function (key) {
-                return item[key] === codeResult[key];
+        return list.some(function (asset) {
+            return Object.keys(asset).every(function (key) {
+                return asset[key] === codeResult[key];
             });
         });
     }
@@ -6230,7 +6230,7 @@ function similarMoments(moments) {
     var points = [],
         result = [];
     if (topCluster.length === 1) {
-        points = topCluster[0].item.getPoints();
+        points = topCluster[0].asset.getPoints();
         for (var i = 0; i < points.length; i++) {
             result.push(points[i].point);
         }
