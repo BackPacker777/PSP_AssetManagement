@@ -58,7 +58,7 @@ class DataHandler {
             rows.forEach(function (row) {
                 // Uncomment line below if you want to return more item info
                 // data.push([row.maker,row.model,row.tag,row.sn,row.type,row.description,row.warranty,row.purchaseDate,row.isTitle1,row.isTitle9,row.is31a]);
-                data.push([row.maker,row.model,row.tag,row.sn,row.location]);
+                data.push([row.tag,row.maker,row.model,row.location]);
             });
             callback(data);
         });
@@ -73,13 +73,15 @@ class DataHandler {
     }
 
     queryData(itemAttributes, callback) {
-        this.db.all(`SELECT * FROM psp_assets WHERE tag = ? OR maker = ? OR model = ? OR location = ?`, [itemAttributes.tag,itemAttributes.maker,itemAttributes.model,itemAttributes.location], function(error, rows) {
+        let assetFind = itemAttributes.split(',');
+        let sql = `SELECT * FROM psp_assets WHERE ${assetFind[0]} = ?`;
+        this.db.all(sql, assetFind[1], function(error, rows) {
             if (error) {
                 console.log(error);
             } else {
                 let data = [];
                 rows.forEach(function (row) {
-                    data.push([row.maker,row.model,row.tag,row.sn]);
+                    data.push([row.tag,row.maker,row.model,row.location]);
                 });
                 callback(data);
             }

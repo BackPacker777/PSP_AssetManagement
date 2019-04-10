@@ -164,7 +164,9 @@ export default class EventHandler {
     }
 
     handleAssetFind() {
+        self = this;
         document.getElementById(`assetFindBtn`).addEventListener(`click`, () => {
+            document.getElementById('assetFindSubmit').disabled = true;
             EventHandler.setDivDisplay([`assetFindDiv`, `doneDiv`]);
             this.populateAssetData(4, (assetData) => {
                 for (let i = 0; i < assetData.length; i++) {
@@ -185,6 +187,9 @@ export default class EventHandler {
                 }
             });
             let findData = null;
+            let doSubmit = function (whichData) {
+                self.handleAssetFindSubmit(whichData, findData);
+            };
             document.getElementById("findAssetMaker").addEventListener('change', () => {
                 let findAssetMaker = document.getElementById('findAssetMaker');
                 let findAssetMakerValue = findAssetMaker.options[findAssetMaker.selectedIndex].value;
@@ -193,11 +198,15 @@ export default class EventHandler {
                     document.getElementById("findAssetModel").disabled = true;
                     document.getElementById("findAssetTag").disabled = true;
                     document.getElementById("findAssetLocation").disabled = true;
+                    document.getElementById('assetFindSubmit').disabled = false;
+                    document.getElementById('assetFindSubmit').addEventListener('click', doSubmit('maker'));
                 } else {
                     findData = null;
                     document.getElementById("findAssetModel").disabled = false;
                     document.getElementById("findAssetTag").disabled = false;
                     document.getElementById("findAssetLocation").disabled = false;
+                    document.getElementById('assetFindSubmit').disabled = true;
+                    document.getElementById('assetFindSubmit').removeEventListener('click', doSubmit());
                 }
             });
             document.getElementById("findAssetModel").addEventListener('change', () => {
@@ -208,11 +217,15 @@ export default class EventHandler {
                     document.getElementById("findAssetMaker").disabled = true;
                     document.getElementById("findAssetTag").disabled = true;
                     document.getElementById("findAssetLocation").disabled = true;
+                    document.getElementById('assetFindSubmit').disabled = false;
+                    document.getElementById('assetFindSubmit').addEventListener('click', doSubmit('model'));
                 } else {
                     findData = null;
                     document.getElementById("findAssetMaker").disabled = false;
                     document.getElementById("findAssetTag").disabled = false;
                     document.getElementById("findAssetLocation").disabled = false;
+                    document.getElementById('assetFindSubmit').disabled = true;
+                    document.getElementById('assetFindSubmit').removeEventListener('click', doSubmit);
                 }
             });
             document.getElementById("findAssetTag").addEventListener('change', () => {
@@ -221,11 +234,15 @@ export default class EventHandler {
                     document.getElementById("findAssetModel").disabled = true;
                     document.getElementById("findAssetMaker").disabled = true;
                     document.getElementById("findAssetLocation").disabled = true;
+                    document.getElementById('assetFindSubmit').disabled = false;
+                    document.getElementById('assetFindSubmit').addEventListener('click', doSubmit('tag'));
                 } else {
                     findData = null;
                     document.getElementById("findAssetModel").disabled = false;
                     document.getElementById("findAssetMaker").disabled = false;
                     document.getElementById("findAssetLocation").disabled = false;
+                    document.getElementById('assetFindSubmit').disabled = true;
+                    document.getElementById('assetFindSubmit').removeEventListener('click', doSubmit);
                 }
             });
             document.getElementById("findAssetLocation").addEventListener('change', () => {
@@ -234,36 +251,39 @@ export default class EventHandler {
                     document.getElementById("findAssetModel").disabled = true;
                     document.getElementById("findAssetMaker").disabled = true;
                     document.getElementById("findAssetTag").disabled = true;
+                    document.getElementById('assetFindSubmit').disabled = false;
+                    document.getElementById('assetFindSubmit').addEventListener('click', doSubmit('location'));
                 } else {
                     findData = null;
                     document.getElementById("findAssetModel").disabled = false;
                     document.getElementById("findAssetMaker").disabled = false;
                     document.getElementById("findAssetTag").disabled = false;
+                    document.getElementById('assetFindSubmit').disabled = true;
+                    document.getElementById('assetFindSubmit').removeEventListener('click', doSubmit);
                 }
             });
-            this.handleAssetFindSubmit(findData);
         });
     }
 
-    handleAssetFindSubmit(findData) {
+    handleAssetFindSubmit(whichData, findData) {
+        let data = `${whichData},${findData}`;
+        document.getElementById('assetFindForm').reset();
         let self = this;
-        document.getElementById('assetFindSubmit').addEventListener('click', () => {
-            document.getElementById('listedAssets').innerHTML = ``;
-            EventHandler.setDivDisplay([`assetListDiv`, `doneDiv`]);
-            fetch(document.url, {
-                method: 'POST',
-                body: findData,
-                headers: {
-                    'x-requested-with': 'fetch.3',
-                    'mode': 'no-cors'
-                }
-            }).then((response) => {
-                return response.json();
-            }).then((data) => {
-                self.listAssets(data);
-            }).catch((err) => {
-                console.log(err);
-            });
+        document.getElementById('listedAssets').innerHTML = ``;
+        EventHandler.setDivDisplay([`assetListDiv`, `doneDiv`]);
+        fetch(document.url, {
+            method: 'POST',
+            body: data,
+            headers: {
+                'x-requested-with': 'fetch.3',
+                'mode': 'no-cors'
+            }
+        }).then((response) => {
+            return response.json();
+        }).then((data) => {
+            self.listAssets(data);
+        }).catch((err) => {
+            console.log(err);
         });
     }
 
@@ -290,21 +310,22 @@ export default class EventHandler {
 
     listAssets(data) {
         if (data.length > 0) {
-            let self = this;
-            const MD_COLUMNS = 4;
-            let assetDeleteList = [];
             for (let i = 0; i < data.length; i++) {
                 let newRow = document.createElement('div');
                 newRow.setAttribute('class', 'grid-x grid-padding-x grid-padding-y');
-                let newCell2 = document.createElement('div');
-                newCell2.setAttribute('class', 'cell small-12 large-12');
-                newCell2.setAttribute('id', `listAsset${i}`);
+                newRow.setAttribute('id', `listAsset${i}`);
                 document.getElementById('listedAssets').appendChild(newRow);
-                newCell2.addEventListener('click', () => {
+                newRow.addEventListener('click', () => {
                     alert('Editing item!');
                 });
-                newRow.appendChild(newCell2);
-                for (let j = 0; j < MD_COLUMNS; j++) {
+
+                let cells = [];
+                for (let j = 0; j < data[0].length; j++) {
+                    cells[i] = [];
+                    cells[i][j] = document.createElement('div');
+                    cells[i][j].setAttribute('class', 'cell small-12 large-12');
+                    cells[i][j].innerText = data[i][j];
+                    newRow.appendChild(cells[i][j]);
                     document.getElementById(`listAsset${i}`).innerText += ` ${data[i][j]}`;
                 }
             }

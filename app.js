@@ -87,7 +87,6 @@ class app {
                         this.data_handler.queryData(body, function (fetchedData) {
                             response.setHeader('Cache-Control', 'max-age=86400');
                             response.writeHead(200, {'content-type': 'text/plain'});
-                            console.log(JSON.stringify(fetchedData));
                             response.end(JSON.stringify(fetchedData));
                         });
                     });
