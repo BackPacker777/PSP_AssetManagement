@@ -17,8 +17,8 @@ class app {
         const EJS = require('ejs');
         const PORT = process.env.PORT || 443;
         const SSL_OPTIONS = {
-            key: this.data_handler.getKey(),
-            cert: this.data_handler.getCert(),
+            key: DATA_HANDLER.getKey(),
+            cert: DATA_HANDLER.getCert(),
             requestCert: true,
             rejectUnauthorized: false
         };
@@ -101,6 +101,20 @@ class app {
                         assetData = JSON.stringify(assetData);
                         response.writeHead(200, {'content-type': 'application/json'});
                         response.end(assetData);
+                    });
+                } else if (request.headers['x-requested-with'] === 'fetch.6') {
+                    let body = [];
+                    request.on('data', (chunk) => {
+                        body.push(chunk);
+                    }).on('error', (err) => {
+                        next(err);
+                    }).on('end', () => {
+                        body = Buffer.concat(body).toString();
+                        this.data_handler.queryTag(body, function (tagExists) {
+                            response.setHeader('Cache-Control', 'max-age=86400');
+                            response.writeHead(200, {'content-type': 'text/plain'});
+                            response.end(JSON.stringify(tagExists));
+                        });
                     });
                 } else {
                     console.log(`Yo, somethings super wrong BDH!`);

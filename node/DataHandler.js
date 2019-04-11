@@ -7,8 +7,8 @@ const SQL = require(`sqlite3`).verbose();
 
 class DataHandler {
     constructor() {
-        this.key = FS.readFileSync(`data/encryption/key.pem`);
-        this.cert = FS.readFileSync(`data/encryption/cert.pem`);
+        // this.key = FS.readFileSync(`data/encryption/key.pem`);
+        // this.cert = FS.readFileSync(`data/encryption/cert.pem`);
         this.initDB();
         // this.db.close();
     }
@@ -58,7 +58,7 @@ class DataHandler {
             rows.forEach(function (row) {
                 // Uncomment line below if you want to return more item info
                 // data.push([row.maker,row.model,row.tag,row.sn,row.type,row.description,row.warranty,row.purchaseDate,row.isTitle1,row.isTitle9,row.is31a]);
-                data.push([row.tag,row.maker,row.model,row.location]);
+                data.push([row.tag,row.location,row.maker,row.model]);
             });
             callback(data);
         });
@@ -81,9 +81,22 @@ class DataHandler {
             } else {
                 let data = [];
                 rows.forEach(function (row) {
-                    data.push([row.tag,row.maker,row.model,row.location]);
+                    data.push([row.tag,row.location,row.maker,row.model]);
                 });
                 callback(data);
+            }
+        });
+    }
+
+    queryTag(data, callback) {
+        let sql = `SELECT * FROM psp_assets WHERE tag = ?`;
+        this.db.all(sql, data, function(error, rows) {
+            if (error) {
+                console.log(error);
+            } else if (rows.length > 0) {
+                callback(true);
+            } else {
+                callback(false);
             }
         });
     }
@@ -111,11 +124,11 @@ class DataHandler {
         });
     }
 
-    getKey() {
+    static getKey() {
         return FS.readFileSync(`data/encryption/key.pem`);
     }
 
-    getCert() {
+    static getCert() {
         return FS.readFileSync(`data/encryption/cert.pem`);
     }
 }

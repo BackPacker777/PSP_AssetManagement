@@ -5,6 +5,13 @@ import Fader from './FadeStuff.js';
 export default class EventHandler {
     constructor() {
         this.fader = new Fader();
+        this.doFindSubmit = function(whichData, findData) {
+            document.getElementById("findAssetMaker").disabled = false;
+            document.getElementById("findAssetModel").disabled = false;
+            document.getElementById("findAssetTag").disabled = false;
+            document.getElementById("findAssetLocation").disabled = false;
+            self.handleAssetFindSubmit(whichData, findData);
+        };
         this.handleAssetTag();
         this.handleTitleCheckBoxes();
         this.handleAssetSubmit();
@@ -36,8 +43,27 @@ export default class EventHandler {
         document.getElementById(`assetTag`).addEventListener(`change`, () => {
             let tagValue = Number(document.getElementById(`assetTag`).value);
             if (tagValue > 0 && tagValue < MAX_TAG) {
-                document.getElementById(`assetMaker`).disabled = false;
-                this.handleAssetMaker();
+                fetch(document.url, {
+                    method: 'POST',
+                    body: tagValue,
+                    headers: {
+                        'x-requested-with': 'fetch.6',
+                        'mode': 'no-cors'
+                    }
+                }).then((response) => {
+                    return response.json();
+                }).then((tagExists) => {
+                    if (tagExists) {
+                        alert(`Tag number exists, please re-enter.`);
+                        document.getElementById(`assetMaker`).disabled = true;
+                        document.getElementById(`assetTag`).value = "";
+                    } else {
+                        document.getElementById(`assetMaker`).disabled = false;
+                        this.handleAssetMaker();
+                    }
+                }).catch((err) => {
+                    console.log(err);
+                });
             } else {
                 alert(`Invalid number, please re-enter.`);
                 document.getElementById(`assetMaker`).disabled = true;
@@ -156,7 +182,7 @@ export default class EventHandler {
 
     handleDone() {
         document.getElementById(`doneBtn`).addEventListener(`click`, () => {
-            document.getElementById('listedAssets').innerHTML = ``;
+            document.getElementById('assetListDiv').innerHTML = ``;
             document.getElementById(`assetEntryForm`).reset();
             document.getElementById(`assetFindForm`).reset();
             EventHandler.setDivDisplay([`splashDiv`, `splashScanDiv`]);
@@ -199,7 +225,7 @@ export default class EventHandler {
                     document.getElementById("findAssetTag").disabled = true;
                     document.getElementById("findAssetLocation").disabled = true;
                     document.getElementById('assetFindSubmit').disabled = false;
-                    document.getElementById('assetFindSubmit').addEventListener('click', doSubmit('maker'));
+                    document.getElementById('assetFindSubmit').addEventListener('click', this.doFindSubmit('maker', findData));
                 } else {
                     findData = null;
                     document.getElementById("findAssetModel").disabled = false;
@@ -267,9 +293,8 @@ export default class EventHandler {
 
     handleAssetFindSubmit(whichData, findData) {
         let data = `${whichData},${findData}`;
-        document.getElementById('assetFindForm').reset();
         let self = this;
-        document.getElementById('listedAssets').innerHTML = ``;
+        document.getElementById('assetFindForm').reset();
         EventHandler.setDivDisplay([`assetListDiv`, `doneDiv`]);
         fetch(document.url, {
             method: 'POST',
@@ -312,22 +337,29 @@ export default class EventHandler {
         if (data.length > 0) {
             for (let i = 0; i < data.length; i++) {
                 let newRow = document.createElement('div');
-                newRow.setAttribute('class', 'grid-x grid-padding-x grid-padding-y');
+                newRow.setAttribute('class', 'grid-x');
                 newRow.setAttribute('id', `listAsset${i}`);
-                document.getElementById('listedAssets').appendChild(newRow);
+                document.getElementById('assetListDiv').appendChild(newRow);
                 newRow.addEventListener('click', () => {
                     alert('Editing item!');
                 });
 
-                let cells = [];
                 for (let j = 0; j < data[0].length; j++) {
+                    let cell = document.createElement('div');
+                    cell.setAttribute('class', 'cell small-3 large-3');
+                    cell.innerText = data[i][j];
+                    newRow.appendChild(cell);
+                }
+
+                let cells = [];
+                /*for (let j = 0; j < data[0].length; j++) {
                     cells[i] = [];
                     cells[i][j] = document.createElement('div');
                     cells[i][j].setAttribute('class', 'cell small-12 large-12');
                     cells[i][j].innerText = data[i][j];
                     newRow.appendChild(cells[i][j]);
                     document.getElementById(`listAsset${i}`).innerText += ` ${data[i][j]}`;
-                }
+                }*/
             }
         } else {
             document.getElementById('listedAssets').innerHTML = `<br><br><h1>Asset does not exist in inventory.</h1>`;
