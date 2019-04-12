@@ -101,6 +101,17 @@ class DataHandler {
         });
     }
 
+    queryEditTag(tag, callback) {
+        let sql = `SELECT * FROM psp_assets WHERE tag = ?`;
+        this.db.get(sql, tag, function(error, rows) {
+            if (error) {
+                console.log(error);
+            } else {
+                callback(rows);
+            }
+        });
+    }
+
     static getAssetData(whichData, callback) {
         let filePath;
         if (whichData === "info") {

@@ -8,8 +8,8 @@ class Main {
         new EventHandler();
         new SplashEventHandler();
         Main.prepUX();
-        Main.loadServiceWorker();
-        Main.handleManifest();
+        // Main.loadServiceWorker();
+        // Main.handleManifest();
     }
 
     static prepUX() {

@@ -116,6 +116,20 @@ class app {
                             response.end(JSON.stringify(tagExists));
                         });
                     });
+                } else if (request.headers['x-requested-with'] === 'fetch.7') {
+                    let body = [];
+                    request.on('data', (chunk) => {
+                        body.push(chunk);
+                    }).on('error', (err) => {
+                        next(err);
+                    }).on('end', () => {
+                        body = Buffer.concat(body).toString();
+                        this.data_handler.queryEditTag(body, function (assetProperties) {
+                            response.setHeader('Cache-Control', 'max-age=86400');
+                            response.writeHead(200, {'content-type': 'text/plain'});
+                            response.end(JSON.stringify(assetProperties));
+                        });
+                    });
                 } else {
                     console.log(`Yo, somethings super wrong BDH!`);
                 }
