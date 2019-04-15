@@ -24,7 +24,7 @@ class DataHandler {
         id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,
         maker TEXT,
         model TEXT,
-        tag INTEGER,
+        tag INTEGER NOT NULL UNIQUE,
         sn TEXT,
         type TEXT,
         description TEXT,
@@ -41,15 +41,26 @@ class DataHandler {
     }
 
     insertRow(formData) {
-        this.db.run(`INSERT INTO psp_assets (maker,model,tag,sn,type,description,warranty,purchaseDate,location,isTitle1,isTitle9,is31a)
-         VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-            [formData.maker, formData.model, formData.tag, formData.sn, formData.type, formData.description, formData.warranty, formData.purchaseDate, formData.location, formData.isTitle1, formData.isTitle9, formData.is31a],
-            function(err) {
+        if (this.db.get(`SELECT tag FROM psp_assets WHERE tag = ?`, formData.tag)) {
+            let sql = `UPDATE psp_assets SET maker = ?, model = ?, sn = ?, type = ?, description = ?, warranty = ?, purchaseDate = ?, location = ?, isTitle1 = ?, isTitle9 = ?, is31a = ? WHERE tag = ?`;
+            this.db.run(sql,[formData.maker, formData.model, formData.sn, formData.type, formData.description, formData.warranty, formData.purchaseDate, formData.location, formData.isTitle1, formData.isTitle9, formData.is31a, formData.tag], function(err) {
                 if (err) {
                     return console.log(err.message);
+                } else {
+                    console.log(`MEOW!`);
                 }
-            }
-        );
+            });
+        } else {
+            this.db.run(`INSERT INTO psp_assets (maker,model,tag,sn,type,description,warranty,purchaseDate,location,isTitle1,isTitle9,is31a)
+            VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                [formData.maker, formData.model, formData.tag, formData.sn, formData.type, formData.description, formData.warranty, formData.purchaseDate, formData.location, formData.isTitle1, formData.isTitle9, formData.is31a],
+                function(err) {
+                    if (err) {
+                        return console.log(err.message);
+                    }
+                }
+            );
+        }
     }
 
     getAllAssets(callback) {

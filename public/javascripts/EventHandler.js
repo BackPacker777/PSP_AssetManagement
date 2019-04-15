@@ -71,14 +71,14 @@ export default class EventHandler {
 
     handleEnterLocation() {
         document.getElementById(`assetLocation`).addEventListener(`change`, () => {
-            if (!(/[0-9][0-9][0-9][clwshmxft]/i).test(document.getElementById(`assetLocation`).value)) {
+            if (!(/[0-9][0-9][0-9][clwshmxftz]/i).test(document.getElementById(`assetLocation`).value)) {
                 alert(`Incorrect location entered. Please try again Ding Dong!`);
                 document.getElementById(`assetLocation`).value = "";
             }
         });
     }
 
-    handleAssetMaker() {
+    handleAssetMaker(assetProperties) {
         this.populateAssetData(4, (assetData) => {
             for (let i = 0; i < assetData.length; i++) {
                 let option = document.createElement("option");
@@ -86,14 +86,19 @@ export default class EventHandler {
                 option.value = assetData[i][0];
                 document.getElementById("assetMaker").appendChild(option);
             }
-            document.getElementById(`assetMaker`).addEventListener(`change`, () => {
-                document.getElementById(`assetType`).disabled = false;
-                this.handleAssetType(assetData);
-            });
+            if (assetProperties) {
+                document.getElementById("assetMaker").value = assetProperties.maker;
+                this.handleAssetType(assetData, assetProperties);
+            } else {
+                document.getElementById(`assetMaker`).addEventListener(`change`, () => {
+                    document.getElementById(`assetType`).disabled = false;
+                    this.handleAssetType(assetData);
+                });
+            }
         });
     }
 
-    handleAssetType(assetData) {
+    handleAssetType(assetData, assetProperties) {
         let assetVendor = document.getElementById('assetMaker');
         let assetVendorValue = assetVendor.options[assetVendor.selectedIndex].value;
         for (let i = 0; i < assetData.length; i++) {
@@ -107,14 +112,19 @@ export default class EventHandler {
                 break;
             }
         }
-        document.getElementById(`assetType`).addEventListener(`change`, () => {
-            document.getElementById(`serialNumber`).disabled = false;
-            document.getElementById(`assetModel`).disabled = false;
-            this.handleAssetModel();
-        });
+        if (! assetProperties) {
+            document.getElementById(`assetType`).addEventListener(`change`, () => {
+                document.getElementById(`serialNumber`).disabled = false;
+                document.getElementById(`assetModel`).disabled = false;
+                this.handleAssetModel();
+            });
+        } else {
+            document.getElementById("assetType").value = assetProperties.type;
+            this.handleAssetModel(assetProperties);
+        }
     }
 
-    handleAssetModel() {
+    handleAssetModel(assetProperties) {
         this.populateAssetData(5, (assetData) => {
             let assetType = document.getElementById('assetType');
             let assetTypeValue = assetType.options[assetType.selectedIndex].value;
@@ -137,6 +147,9 @@ export default class EventHandler {
             document.getElementById(`title9`).disabled = false;
             document.getElementById(`31a`).disabled = false;
             document.getElementById(`assetSubmit`).disabled = false;
+            if (assetProperties) {
+                document.getElementById("assetModel").value = assetProperties.model;
+            }
         });
     }
 
@@ -418,17 +431,10 @@ export default class EventHandler {
             document.getElementById(`31a`).disabled = false;
             document.getElementById(`assetSubmit`).disabled = false;
 
-            console.log(assetProperties);
-
-            this.handleAssetMaker();
-            this.handleAssetType(assetProperties.maker);
-            this.handleAssetModel();
+            this.handleAssetMaker(assetProperties);
 
             document.getElementById('assetTag').value = assetProperties.tag;
-            document.getElementById('assetMaker').value = assetProperties.maker;
-            document.getElementById('assetType').value = assetProperties.type;
             document.getElementById('serialNumber').value = assetProperties.sn;
-            document.getElementById('assetModel').value = assetProperties.model;
             document.getElementById('assetDescription').value = assetProperties.description;
             document.getElementById('assetLocation').value = assetProperties.location;
             document.getElementById('purchaseDate').value = assetProperties.purchaseDate;
@@ -436,29 +442,8 @@ export default class EventHandler {
             document.getElementById('title1').value = assetProperties.isTitle1;
             document.getElementById('title9').value = assetProperties.isTitle9;
             document.getElementById('31a').value = assetProperties.is31a;
-
         }).catch((err) => {
             console.log(err);
-        });
-    }
-
-    handleAssetDelete(assetDeleteList) {
-        document.getElementById('assetDeleteBtn').addEventListener('click', () => {
-            fetch(document.url, {
-                    method: 'POST',
-                    body: JSON.stringify(assetDeleteList),
-                    headers: {
-                        'x-requested-with': 'fetch.2',
-                        'mode': 'no-cors'
-                    }
-                }).then((response) => {
-                    console.log(response.text());
-                    return response.json();
-                }).catch((err) => {
-                    // console.log(err);
-                });
-            document.getElementById('listedAssets').innerHTML = ``;
-            document.getElementById(`assetListBtn`).click();
         });
     }
 
