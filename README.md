@@ -1,8 +1,10 @@
 ## Todo:
-* Add 'edit/update item' functionality
-* Fix item find
+* Delete capability?
+* Investigate scanning capability
 
 ## Completed:
+* ~~Add 'edit/update item' functionality~~
+* ~~Fix item find~~
 * ~~Working on Find Item ( 07/10/2018 )~~
 * ~~'Delete Button' functionality......~~
 * ~~Prevent blank item entry~~

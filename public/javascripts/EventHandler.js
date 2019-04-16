@@ -177,22 +177,6 @@ export default class EventHandler {
         }
     }
 
-    handleAssetSubmit() {
-        document.getElementById(`assetSubmit`).addEventListener(`click`, () => {
-            if (document.forms['assetEntryForm'].checkValidity()) {
-                this.sendFormData();
-                document.getElementById('happyFace').style.display = 'none';
-                this.fader.doFade('in', 'entryResult');
-                setTimeout(() => {
-                    document.getElementById('entryResult').style.display = 'none';
-                    this.fader.doFade('in', 'happyFace');
-                }, 2000);
-            } else {
-                document.forms['assetEntryForm'].reportValidity();
-            }
-        });
-    }
-
     handleAssetReScan() {
         document.getElementById(`reScanBtn`).addEventListener(`click`, () => {
             EventHandler.setDivDisplay([`splashDiv`, `splashScanDiv`]);
@@ -216,7 +200,7 @@ export default class EventHandler {
     handleAssetFind() {
         self = this;
         document.getElementById(`assetFindBtn`).addEventListener(`click`, () => {
-            document.getElementById('assetFindSubmit').disabled = true;
+            // document.getElementById('assetFindSubmit').disabled = true;
             EventHandler.setDivDisplay([`assetFindDiv`, `doneDiv`]);
             this.populateAssetData(4, (assetData) => {
                 for (let i = 0; i < assetData.length; i++) {
@@ -248,15 +232,16 @@ export default class EventHandler {
                     document.getElementById("findAssetModel").disabled = true;
                     document.getElementById("findAssetTag").disabled = true;
                     document.getElementById("findAssetLocation").disabled = true;
-                    document.getElementById('assetFindSubmit').disabled = false;
-                    document.getElementById('assetFindSubmit').addEventListener('click', this.doFindSubmit('maker', findData));
+                    this.doFindSubmit('maker', findData);
+                    // document.getElementById('assetFindSubmit').disabled = false;
+                    // document.getElementById('assetFindSubmit').addEventListener('click', this.doFindSubmit('maker', findData));
                 } else {
                     findData = null;
                     document.getElementById("findAssetModel").disabled = false;
                     document.getElementById("findAssetTag").disabled = false;
                     document.getElementById("findAssetLocation").disabled = false;
-                    document.getElementById('assetFindSubmit').disabled = true;
-                    document.getElementById('assetFindSubmit').removeEventListener('click', doSubmit());
+                    // document.getElementById('assetFindSubmit').disabled = true;
+                    // document.getElementById('assetFindSubmit').removeEventListener('click', doSubmit());
                 }
             });
             document.getElementById("findAssetModel").addEventListener('change', () => {
@@ -267,15 +252,16 @@ export default class EventHandler {
                     document.getElementById("findAssetMaker").disabled = true;
                     document.getElementById("findAssetTag").disabled = true;
                     document.getElementById("findAssetLocation").disabled = true;
-                    document.getElementById('assetFindSubmit').disabled = false;
-                    document.getElementById('assetFindSubmit').addEventListener('click', doSubmit('model', findData));
+                    doSubmit('model', findData);
+                    // document.getElementById('assetFindSubmit').disabled = false;
+                    // document.getElementById('assetFindSubmit').addEventListener('click', doSubmit('model', findData));
                 } else {
                     findData = null;
                     document.getElementById("findAssetMaker").disabled = false;
                     document.getElementById("findAssetTag").disabled = false;
                     document.getElementById("findAssetLocation").disabled = false;
-                    document.getElementById('assetFindSubmit').disabled = true;
-                    document.getElementById('assetFindSubmit').removeEventListener('click', doSubmit);
+                    // document.getElementById('assetFindSubmit').disabled = true;
+                    // document.getElementById('assetFindSubmit').removeEventListener('click', doSubmit);
                 }
             });
             document.getElementById("findAssetTag").addEventListener('change', () => {
@@ -284,15 +270,16 @@ export default class EventHandler {
                     document.getElementById("findAssetModel").disabled = true;
                     document.getElementById("findAssetMaker").disabled = true;
                     document.getElementById("findAssetLocation").disabled = true;
-                    document.getElementById('assetFindSubmit').disabled = false;
-                    document.getElementById('assetFindSubmit').addEventListener('click', doSubmit('tag', findData));
+                    doSubmit('tag', findData);
+                    // document.getElementById('assetFindSubmit').disabled = false;
+                    // document.getElementById('assetFindSubmit').addEventListener('click', doSubmit('tag', findData));
                 } else {
                     findData = null;
                     document.getElementById("findAssetModel").disabled = false;
                     document.getElementById("findAssetMaker").disabled = false;
                     document.getElementById("findAssetLocation").disabled = false;
-                    document.getElementById('assetFindSubmit').disabled = true;
-                    document.getElementById('assetFindSubmit').removeEventListener('click', doSubmit);
+                    // document.getElementById('assetFindSubmit').disabled = true;
+                    // document.getElementById('assetFindSubmit').removeEventListener('click', doSubmit);
                 }
             });
             document.getElementById("findAssetLocation").addEventListener('change', () => {
@@ -301,15 +288,16 @@ export default class EventHandler {
                     document.getElementById("findAssetModel").disabled = true;
                     document.getElementById("findAssetMaker").disabled = true;
                     document.getElementById("findAssetTag").disabled = true;
-                    document.getElementById('assetFindSubmit').disabled = false;
-                    document.getElementById('assetFindSubmit').addEventListener('click', doSubmit('location', findData));
+                    doSubmit('location', findData);
+                    // document.getElementById('assetFindSubmit').disabled = false;
+                    // document.getElementById('assetFindSubmit').addEventListener('click', doSubmit('location', findData));
                 } else {
                     findData = null;
                     document.getElementById("findAssetModel").disabled = false;
                     document.getElementById("findAssetMaker").disabled = false;
                     document.getElementById("findAssetTag").disabled = false;
-                    document.getElementById('assetFindSubmit').disabled = true;
-                    document.getElementById('assetFindSubmit').removeEventListener('click', doSubmit);
+                    // document.getElementById('assetFindSubmit').disabled = true;
+                    // document.getElementById('assetFindSubmit').removeEventListener('click', doSubmit);
                 }
             });
         });
@@ -475,6 +463,33 @@ export default class EventHandler {
             console.log(error);
         });
         document.getElementById('assetEntryForm').reset();
+    }
+
+    handleAssetSubmit() {
+        document.getElementById(`assetSubmit`).addEventListener(`click`, () => {
+            if (document.forms['assetEntryForm'].checkValidity()) {
+                this.sendFormData();
+                document.getElementById('happyFace').style.display = 'none';
+                this.fader.doFade('in', 'entryResult');
+                setTimeout(() => {
+                    document.getElementById('entryResult').style.display = 'none';
+                    this.fader.doFade('in', 'happyFace');
+                }, 2000);
+                EventHandler.enableDisableInputs(['assetTag']);
+            } else {
+                document.forms['assetEntryForm'].reportValidity();
+            }
+        });
+    }
+
+    static enableDisableInputs(inputs) {
+        const INPUTS = ['assetTag','assetMaker','assetType','serialNumber','assetModel','assetDescription','assetLocation','purchaseDate','assetWarranty','title1','title9','31a'];
+        for (let index of INPUTS) {
+            document.getElementById(index).disabled = true;
+        }
+        for (let input of inputs) {
+            document.getElementById(input).disabled = false;
+        }
     }
 
     static setDivDisplay(divs) {
