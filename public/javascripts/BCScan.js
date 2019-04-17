@@ -1,21 +1,22 @@
 "use strict";
 
 export default class BCScan {
-    constructor() {
-        BCScan.startBCScanner();
+    constructor(callback) {
+        this.barCode = 0;
+        this.startBCScanner(callback);
     }
 
-    static startBCScanner() {
+    startBCScanner(callback) {
         Quagga.init({
             inputStream : {
                 name : "Live",
                 type : "LiveStream",
                 numOfWorkers: navigator.hardwareConcurrency,
-                target: document.querySelector('#scanner-container'),
+                target: document.querySelector('#scannerContainer'),
                 constraints: {
                     /*width: 480,
                     height: 320,*/
-                    width: 400,
+                    width: 320,
                     height: 200,
                     facingMode: "environment"
                 },
@@ -66,7 +67,7 @@ export default class BCScan {
             Quagga.start();
         });
 
-        Quagga.onProcessed(function (result) {
+        Quagga.onProcessed((result) => {
             let drawingCtx = Quagga.canvas.ctx.overlay,
                 drawingCanvas = Quagga.canvas.dom.overlay;
 
@@ -90,23 +91,10 @@ export default class BCScan {
             }
         });
 
-        Quagga.onDetected(function (result) {
-            let getThisValueFromSQL = 0;
-            if (Number(result.codeResult.code) !== getThisValueFromSQL) {
-                Quagga.stop();
-                document.getElementById(`splashDiv`).style.display = `none`;
-                document.getElementById(`splashScanDiv`).style.display = `none`;
-                document.getElementById(`scanner-container`).style.display = `none`;
-                document.getElementById(`scanResultsNotExistDiv`).style.display = `block`;
-                document.getElementById(`barCode`).innerText = result.codeResult.code;
-                document.getElementById(`assetTag`).value = result.codeResult.code;
-            } else {
-                Quagga.stop();
-                document.getElementById(`splashDiv`).style.display = `none`;
-                document.getElementById(`splashScanDiv`).style.display = `none`;
-                document.getElementById(`scanner-container`).style.display = `none`;
-                document.getElementById(`assetEntryDiv`).style.display = `block`;
-            }
+        Quagga.onDetected((result) => {
+            this.barCode = result.codeResult.code;
+            Quagga.stop();
+            callback(this.barCode);
         });
     }
 }

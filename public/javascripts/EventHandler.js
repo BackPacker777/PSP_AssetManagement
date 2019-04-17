@@ -1,6 +1,7 @@
 "use strict";
 
 import Fader from './FadeStuff.js';
+import BCScan from './BCScan.js';
 
 export default class EventHandler {
     constructor() {
@@ -8,11 +9,12 @@ export default class EventHandler {
         this.doFindSubmit = function(whichData, findData) {
             self.handleAssetFindSubmit(whichData, findData);
         };
+        this.handleAssetEntryBtn();
+        this.handleSplashScanBtn();
         this.handleEnterAssetTag();
         this.handleEnterLocation();
         this.handleTitleCheckBoxes();
         this.handleAssetSubmit();
-        this.handleAssetReScan();
         this.handleAssetFind();
         this.handleAssetList();
         this.handleDone();
@@ -32,6 +34,24 @@ export default class EventHandler {
             callback(data);
         }).catch((error) => {
             console.log(error);
+        });
+    }
+
+    handleAssetEntryBtn() {
+        document.getElementById(`assetEntryBtn`).addEventListener(`click`, () => {
+            EventHandler.setDivDisplay([`assetEntryDiv`,`doneDiv`]);
+            EventHandler.enableDisableInputs([`assetTag`]);
+        });
+    }
+
+    handleSplashScanBtn() {
+        let self = this;
+        document.getElementById(`splashScanBtn`).addEventListener(`click`, () => {
+            EventHandler.setDivDisplay([`splashDiv`,`scannerContainer`]);
+            new BCScan((barCode) => {
+                console.log(barCode);
+                self.handleAssetFindSubmit('tag', barCode, true);
+            });
         });
     }
 
@@ -177,19 +197,19 @@ export default class EventHandler {
         }
     }
 
-    handleAssetReScan() {
-        document.getElementById(`reScanBtn`).addEventListener(`click`, () => {
-            EventHandler.setDivDisplay([`splashDiv`, `splashScanDiv`]);
-        });
-    }
+    // handleAssetReScan() {
+    //     document.getElementById(`reScanBtn`).addEventListener(`click`, () => {
+    //         EventHandler.setDivDisplay([`splashDiv`, `splashScanDiv`]);
+    //     });
+    // }
 
     handleDone() {
         document.getElementById(`doneBtn`).addEventListener(`click`, () => {
-            document.getElementById('assetListDivResults').style.display = 'none';
             document.getElementById('assetListDivResults').innerHTML = ``;
             document.getElementById(`assetEntryForm`).reset();
             document.getElementById(`assetFindForm`).reset();
-            EventHandler.enableDisableInputs(["findAssetMaker","findAssetModel","findAssetTag","findAssetLocation"]);
+            EventHandler.setDivDisplay([`splashDiv`,`splashScanDiv`]);
+            EventHandler.enableDisableInputs([`assetEntryBtn`,`assetFindBtn`,`assetListBtn`,`installBtn`,`splashScanBtn`]);
             EventHandler.setDivDisplay([`splashDiv`, `splashScanDiv`]);
         });
     }
@@ -216,74 +236,51 @@ export default class EventHandler {
         });
         document.getElementById(`assetFindBtn`).addEventListener(`click`, () => {
             EventHandler.setDivDisplay([`assetFindDiv`, `doneDiv`]);
+            EventHandler.enableDisableInputs([`findAssetMaker`,`findAssetModel`,`findAssetTag`,`findAssetLocation`]);
             let findData = null;
-            let doSubmit = function (whichData) {
+            let doSubmit = function(whichData) {
                 self.handleAssetFindSubmit(whichData, findData);
             };
             document.getElementById("findAssetMaker").addEventListener('change', () => {
                 let findAssetMaker = document.getElementById('findAssetMaker');
                 let findAssetMakerValue = findAssetMaker.options[findAssetMaker.selectedIndex].value;
-                if (findAssetMakerValue !== 'choose') {
+                if (findAssetMakerValue !== 'CHOOSE') {
                     findData = findAssetMakerValue;
-                    document.getElementById("findAssetModel").disabled = true;
-                    document.getElementById("findAssetTag").disabled = true;
-                    document.getElementById("findAssetLocation").disabled = true;
                     this.doFindSubmit('maker', findData);
                 } else {
                     findData = null;
-                    document.getElementById("findAssetModel").disabled = false;
-                    document.getElementById("findAssetTag").disabled = false;
-                    document.getElementById("findAssetLocation").disabled = false;
                 }
             });
             document.getElementById("findAssetModel").addEventListener('change', () => {
                 let findAssetModel = document.getElementById('findAssetModel');
                 let findAssetModelValue = findAssetModel.options[findAssetModel.selectedIndex].value;
-                if (findAssetModelValue !== 'choose') {
+                if (findAssetModelValue !== 'CHOOSE') {
                     findData = findAssetModelValue;
-                    document.getElementById("findAssetMaker").disabled = true;
-                    document.getElementById("findAssetTag").disabled = true;
-                    document.getElementById("findAssetLocation").disabled = true;
                     doSubmit('model', findData);
                 } else {
                     findData = null;
-                    document.getElementById("findAssetMaker").disabled = false;
-                    document.getElementById("findAssetTag").disabled = false;
-                    document.getElementById("findAssetLocation").disabled = false;
                 }
             });
             document.getElementById("findAssetTag").addEventListener('change', () => {
                 if (document.getElementById("findAssetTag").value) {
                     findData = document.getElementById("findAssetTag").value;
-                    document.getElementById("findAssetModel").disabled = true;
-                    document.getElementById("findAssetMaker").disabled = true;
-                    document.getElementById("findAssetLocation").disabled = true;
                     doSubmit('tag', findData);
                 } else {
                     findData = null;
-                    document.getElementById("findAssetModel").disabled = false;
-                    document.getElementById("findAssetMaker").disabled = false;
-                    document.getElementById("findAssetLocation").disabled = false;
                 }
             });
             document.getElementById("findAssetLocation").addEventListener('change', () => {
                 if (document.getElementById("findAssetLocation").value) {
                     findData = document.getElementById("findAssetLocation").value;
-                    document.getElementById("findAssetModel").disabled = true;
-                    document.getElementById("findAssetMaker").disabled = true;
-                    document.getElementById("findAssetTag").disabled = true;
                     doSubmit('location', findData);
                 } else {
                     findData = null;
-                    document.getElementById("findAssetModel").disabled = false;
-                    document.getElementById("findAssetMaker").disabled = false;
-                    document.getElementById("findAssetTag").disabled = false;
                 }
             });
         });
     }
 
-    handleAssetFindSubmit(whichData, findData) {
+    handleAssetFindSubmit(whichData, findData, isScan) {
         let data = `${whichData},${findData}`;
         let self = this;
         document.getElementById('assetFindForm').reset();
@@ -300,6 +297,12 @@ export default class EventHandler {
         }).then((data) => {
             if (data.length > 0) {
                 self.listAssets(data);
+            } else if (isScan) {
+                EventHandler.setDivDisplay([`assetEntryDiv`,`doneDiv`]);
+                EventHandler.enableDisableInputs([`assetTag`,`assetMaker`]);
+                document.getElementById(`assetTag`).value = findData;
+                let event = new Event('change');
+                document.getElementById(`assetTag`).dispatchEvent(event);
             } else {
                 document.getElementById('assetListDivResults').innerHTML = `<br><br><h1>Asset does not exist in inventory.</h1>`;
             }
@@ -324,7 +327,7 @@ export default class EventHandler {
                 if (data.length > 0) {
                     self.listAssets(data);
                 } else {
-                    document.getElementById('\'assetListDivResults').innerHTML = `<br><br><h1>Asset does not exist in inventory.</h1>`;
+                    document.getElementById('assetListDivResults').innerHTML = `<br><br><h1>Asset does not exist in inventory.</h1>`;
                 }
             }).catch(function (error) {
                 console.log(error);
@@ -444,7 +447,7 @@ export default class EventHandler {
     }
 
     static enableDisableInputs(inputs) {
-        const INPUTS = ['assetTag','assetMaker','assetType','serialNumber','assetModel','assetDescription','assetLocation','purchaseDate','assetWarranty','title1','title9','31a','findAssetMaker','findAssetModel','findAssetTag','findAssetLocation'];
+        const INPUTS = [`assetTag`,`assetMaker`,`assetType`,`serialNumber`,`assetModel`,`assetDescription`,`assetLocation`,`purchaseDate`,`assetWarranty`,`title1`,`title9`,`31a`,`findAssetMaker`,`findAssetModel`,`findAssetTag`,`findAssetLocation`,`assetEntryBtn`,`assetFindBtn`,`assetListBtn`,`installBtn`,`splashScanBtn`];
         for (let index of INPUTS) {
             document.getElementById(index).disabled = true;
         }
@@ -454,9 +457,11 @@ export default class EventHandler {
     }
 
     static setDivDisplay(divs) {
-        const DIVS = [`assetDeleteDiv`,`splashDiv`,`splashScanDiv`,`assetEntryDiv`,`assetListDiv`,`assetListDivResults`,`scanResultsExistsDiv`,`scanResultsNotExistDiv`,`assetFindDiv`,`doneDiv`, `entryResult`];
+        const DIVS = [`splashDiv`,`splashScanDiv`,`assetEntryDiv`,`assetListDiv`,`assetListDivResults`,`scanResultsExistsDiv`,`scanResultsNotExistDiv`,`assetFindDiv`,`doneDiv`,`entryResult`,`installBanner`,`scannerContainer`];
         for (let index of DIVS) {
-            document.getElementById(index).style.display = `none`;
+            if (document.getElementById(index)) {
+                document.getElementById(index).style.display = `none`;
+            }
         }
         for (let div of divs) {
             document.getElementById(div).style.display = `block`;

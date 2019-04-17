@@ -85,14 +85,14 @@ textarea {
   font-size: 1.2em !important;
 }
 
-#scanner-container {
+#scannerContainer {
   position: relative;
   height: 200px;
   width: 400px;
   margin: 0 auto;
 }
 
-#scanner-container > canvas {
+#scannerContainer > canvas {
   position: absolute;
   height: 200px;
   width: 400px;
