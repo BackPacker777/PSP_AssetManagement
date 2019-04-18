@@ -1,13 +1,24 @@
-/*  AUTHOR: hbates@northmen.org
- *  VERSION: 1.0
- *  CREATED: 12.01.2015
- */
-
 "use strict";
 
+/**
+ * @module FadeStuff
+ */
+
+/**
+ * @desc Library class for fading DOM elements in/out
+ */
 export default class FadeStuff {
+    /**
+     * @desc Constructor
+     */
     constructor() {}
 
+    /**
+     *
+     * @param direction
+     * @param fadeWhat
+     * @desc Method that performs fades
+     */
     doFade(direction, fadeWhat) {
         //http://www.chrisbuttery.com/articles/fade-in-fade-out-with-javascript/
         let div = document.getElementById(fadeWhat);

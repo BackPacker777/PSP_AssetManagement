@@ -1,6 +1,7 @@
 ## Todo:
 * Delete capability?
 * Add building maps for clicking to see inventory
+* Finish JSDoc in EventHandler & BCScan
 
 ## Completed:
 * ~~Add 'edit/update item' functionality~~
