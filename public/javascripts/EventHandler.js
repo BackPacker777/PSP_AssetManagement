@@ -12,7 +12,6 @@ export default class EventHandler {
         this.handleAssetEntryBtn();
         this.handleSplashScanBtn();
         this.handleEnterAssetTag();
-        this.handleEnterLocation();
         this.handleTitleCheckBoxes();
         this.handleAssetSubmit();
         this.handleAssetFind();
@@ -56,6 +55,7 @@ export default class EventHandler {
     }
 
     handleEnterAssetTag() {
+        document.getElementById(`assetLocation`).value = '';
         const MAX_TAG = 99999999;
         document.getElementById(`assetTag`).addEventListener(`change`, () => {
             let tagValue = Number(document.getElementById(`assetTag`).value);
@@ -75,7 +75,7 @@ export default class EventHandler {
                         document.getElementById(`assetMaker`).disabled = true;
                         document.getElementById(`assetTag`).value = "";
                     } else {
-                        document.getElementById(`assetMaker`).disabled = false;
+                        EventHandler.enableDisableInputs([`assetTag`,`assetMaker`]);
                         this.handleAssetMaker();
                     }
                 }).catch((err) => {
@@ -89,16 +89,13 @@ export default class EventHandler {
         });
     }
 
-    handleEnterLocation() {
-        document.getElementById(`assetLocation`).addEventListener(`change`, () => {
-            if (!(/[0-9][0-9][0-9][clwshmxftz]/i).test(document.getElementById(`assetLocation`).value)) {
-                alert(`Incorrect location entered. Please try again Ding Dong!`);
-                document.getElementById(`assetLocation`).value = "";
-            }
-        });
-    }
-
     handleAssetMaker(assetProperties) {
+        document.getElementById(`assetLocation`).value = '';
+        document.getElementById("assetMaker").options.length = 0;
+        let option = document.createElement("option");
+        option.text = `CHOOSE`;
+        option.value = `CHOOSE`;
+        document.getElementById("assetMaker").appendChild(option);
         this.populateAssetData(4, (assetData) => {
             for (let i = 0; i < assetData.length; i++) {
                 let option = document.createElement("option");
@@ -110,17 +107,24 @@ export default class EventHandler {
                 document.getElementById("assetMaker").value = assetProperties.maker;
                 this.handleAssetType(assetData, assetProperties);
             } else {
-                document.getElementById(`assetMaker`).addEventListener(`change`, () => {
-                    document.getElementById(`assetType`).disabled = false;
-                    this.handleAssetType(assetData);
+                document.getElementById(`assetMaker`).addEventListener(`change`, (event) => {
+                    event.stopImmediatePropagation();
+                    let assetVendor = document.getElementById('assetMaker');
+                    let assetVendorValue = assetVendor.options[assetVendor.selectedIndex].value;
+                    EventHandler.enableDisableInputs([`assetTag`,`assetMaker`,`assetType`]);
+                    this.handleAssetType(assetData, assetVendorValue, null);
                 });
             }
         });
     }
 
-    handleAssetType(assetData, assetProperties) {
-        let assetVendor = document.getElementById('assetMaker');
-        let assetVendorValue = assetVendor.options[assetVendor.selectedIndex].value;
+    handleAssetType(assetData, assetVendorValue, assetProperties) {
+        document.getElementById(`assetLocation`).value = '';
+        document.getElementById("assetType").options.length = 0;
+        let option = document.createElement("option");
+        option.text = `CHOOSE`;
+        option.value = `CHOOSE`;
+        document.getElementById("assetType").appendChild(option);
         for (let i = 0; i < assetData.length; i++) {
             if (assetData[i][0] === assetVendorValue) {
                 for (let j = 1; j < assetData[i].length; j++) {
@@ -133,10 +137,12 @@ export default class EventHandler {
             }
         }
         if (! assetProperties) {
-            document.getElementById(`assetType`).addEventListener(`change`, () => {
-                document.getElementById(`serialNumber`).disabled = false;
-                document.getElementById(`assetModel`).disabled = false;
-                this.handleAssetModel();
+            document.getElementById(`assetType`).addEventListener(`change`, (event) => {
+                event.stopImmediatePropagation();
+                EventHandler.enableDisableInputs([`assetTag`,`assetMaker`,`assetType`,`serialNumber`,`assetModel`]);
+                let assetType = document.getElementById('assetType');
+                let assetTypeValue = assetType.options[assetType.selectedIndex].value;
+                this.handleAssetModel(assetTypeValue, null);
             });
         } else {
             document.getElementById("assetType").value = assetProperties.type;
@@ -144,10 +150,14 @@ export default class EventHandler {
         }
     }
 
-    handleAssetModel(assetProperties) {
+    handleAssetModel(assetTypeValue, assetProperties) {
+        document.getElementById(`assetLocation`).value = '';
+        document.getElementById("assetModel").options.length = 0;
+        let option = document.createElement("option");
+        option.text = `CHOOSE`;
+        option.value = `CHOOSE`;
+        document.getElementById("assetModel").appendChild(option);
         this.populateAssetData(5, (assetData) => {
-            let assetType = document.getElementById('assetType');
-            let assetTypeValue = assetType.options[assetType.selectedIndex].value;
             for (let i = 0; i < assetData.length; i++) {
                 if (assetData[i][0] === assetTypeValue) {
                     for (let j = 1; j < assetData[i].length; j++) {
@@ -159,16 +169,22 @@ export default class EventHandler {
                     break;
                 }
             }
-            document.getElementById(`assetDescription`).disabled = false;
-            document.getElementById(`assetLocation`).disabled = false;
-            document.getElementById(`purchaseDate`).disabled = false;
-            document.getElementById(`assetWarranty`).disabled = false;
-            document.getElementById(`title1`).disabled = false;
-            document.getElementById(`title9`).disabled = false;
-            document.getElementById(`31a`).disabled = false;
-            document.getElementById(`assetSubmit`).disabled = false;
             if (assetProperties) {
                 document.getElementById("assetModel").value = assetProperties.model;
+            }
+            this.handleEnterLocation();
+            EventHandler.enableDisableInputs([`assetTag`,`assetMaker`,`assetType`,`serialNumber`,`assetModel`,`assetLocation`]);
+        });
+    }
+
+    handleEnterLocation() {
+        document.getElementById(`assetLocation`).addEventListener(`change`, () => {
+            if (!(/[0-9][0-9][0-9][clwshmxftz]/i).test(document.getElementById(`assetLocation`).value)) {
+                alert(`Incorrect location entered. Please try again Ding Dong!`);
+                document.getElementById(`assetLocation`).value = "";
+            } else {
+                EventHandler.setDivDisplay([`assetEntryDiv`,`doneDiv`,`assetTag`,`assetMaker`,`assetType`,`serialNumber`,`assetModel`,`assetDescription`,`assetLocation`,`purchaseDate`,`assetWarranty`]);
+                EventHandler.enableDisableInputs([`assetTag`,`assetMaker`,`assetType`,`serialNumber`,`assetModel`,`assetLocation`,`assetDescription`,`title1`,`title9`,`31a`,`assetSubmit`,`purchaseDate`,`assetWarranty`]);
             }
         });
     }
@@ -197,12 +213,6 @@ export default class EventHandler {
         }
     }
 
-    // handleAssetReScan() {
-    //     document.getElementById(`reScanBtn`).addEventListener(`click`, () => {
-    //         EventHandler.setDivDisplay([`splashDiv`, `splashScanDiv`]);
-    //     });
-    // }
-
     handleDone() {
         document.getElementById(`doneBtn`).addEventListener(`click`, () => {
             document.getElementById('assetListDivResults').innerHTML = ``;
@@ -216,25 +226,34 @@ export default class EventHandler {
 
     handleAssetFind() {
         self = this;
-        this.populateAssetData(4, (assetData) => {
-            for (let i = 0; i < assetData.length; i++) {
-                let option = document.createElement("option");
-                option.text = assetData[i][0];
-                option.value = assetData[i][0];
-                document.getElementById("findAssetMaker").appendChild(option);
-            }
-        });
-        this.populateAssetData(5, (assetData) => {
-            for (let i = 1; i < assetData.length; i++) {
-                for (let j = 1; j < assetData[i].length; j++) {
-                    let option = document.createElement("option");
-                    option.text = assetData[i][j];
-                    option.value = assetData[i][j];
-                    document.getElementById("findAssetModel").appendChild(option);
-                }
-            }
-        });
         document.getElementById(`assetFindBtn`).addEventListener(`click`, () => {
+            let findDivs = [`findAssetModel`,`findAssetMaker`];
+            for (let div of findDivs) {
+                document.getElementById(div).options.length = 0;
+                let option = document.createElement("option");
+                option.text = `CHOOSE`;
+                option.value = `CHOOSE`;
+                document.getElementById(div).appendChild(option);
+            }
+            this.populateAssetData(4, (assetData) => {
+                for (let i = 0; i < assetData.length; i++) {
+                    let option = document.createElement("option");
+                    option.text = assetData[i][0];
+                    option.value = assetData[i][0];
+                    document.getElementById("findAssetMaker").appendChild(option);
+                }
+            });
+            this.populateAssetData(5, (assetData) => {
+                for (let i = 1; i < assetData.length; i++) {
+                    for (let j = 1; j < assetData[i].length; j++) {
+                        let option = document.createElement("option");
+                        option.text = assetData[i][j];
+                        option.value = assetData[i][j];
+                        document.getElementById("findAssetModel").appendChild(option);
+                    }
+                }
+            });
+
             EventHandler.setDivDisplay([`assetFindDiv`, `doneDiv`]);
             EventHandler.enableDisableInputs([`findAssetMaker`,`findAssetModel`,`findAssetTag`,`findAssetLocation`]);
             let findData = null;
