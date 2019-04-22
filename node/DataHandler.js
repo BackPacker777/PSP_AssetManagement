@@ -1,23 +1,18 @@
-'use strict';
+//   todo:
+
+`use strict`;
 
 const FS = require(`fs`);
 const SQL = require(`sqlite3`).verbose();
 
-/**
- * Class for handling all file I/O
- */
 class DataHandler {
-    /**
-     * Constructor for Datahandler
-     * @desc initializes DB and creates table if ! exist
-     */
     constructor() {
+        // this.key = FS.readFileSync(`data/encryption/key.pem`);
+        // this.cert = FS.readFileSync(`data/encryption/cert.pem`);
         this.initDB();
+        // this.db.close();
     }
 
-    /**
-     * @desc initializes DB and creates table if ! exist
-     */
     initDB() {
         this.db = new SQL.Database(`data/asset_data.db`, (err) => {
             if (err) {
@@ -26,29 +21,26 @@ class DataHandler {
             console.log(`Connected to Sqlite3 DB`);
         });
         this.db.run(`CREATE TABLE IF NOT EXISTS psp_assets (
-            id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,
-            maker TEXT,
-            model TEXT,
-            tag INTEGER NOT NULL UNIQUE,
-            sn TEXT,
-            type TEXT,
-            description TEXT,
-            warranty INTEGER,
-            purchaseDate INTEGER,
-            location TEXT,
-            isTitle1 INTEGER DEFAULT 0,
-            isTitle9 INTEGER DEFAULT 0,
-            is31a INTEGER DEFAULT 0
+        id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,
+        maker TEXT,
+        model TEXT,
+        tag INTEGER NOT NULL UNIQUE,
+        sn TEXT,
+        type TEXT,
+        description TEXT,
+        warranty INTEGER,
+        purchaseDate INTEGER,
+        location TEXT,
+        bad INTEGER DEFAULT 0,
+        isTitle1 INTEGER DEFAULT 0,
+        isTitle9 INTEGER DEFAULT 0,
+        is31a INTEGER DEFAULT 0
         )`); // https://stackoverflow.com/questions/40645216/check-if-sql-table-exists-in-python
         console.log(`Sqlite table -psp_assets- created`);
         this.db.run(`PRAGMA AUTO_VACUUM = FULL`);
         // date: http://www.sqlitetutorial.net/sqlite-date/
     }
 
-    /**
-     * @param formData
-     * @desc if tag ! exist, inserts new data. Else, edits existing
-     */
     insertRow(formData) {
         let self = this;
         for (const key in formData) {
@@ -57,16 +49,16 @@ class DataHandler {
         this.db.serialize(() => {
             this.db.get(`SELECT * FROM psp_assets WHERE tag = ?`, formData.tag, function(err, row) {
                 if (row) {
-                    let sql = `UPDATE psp_assets SET maker = ?, model = ?, sn = ?, type = ?, description = ?, warranty = ?, purchaseDate = ?, location = ?, isTitle1 = ?, isTitle9 = ?, is31a = ? WHERE tag = ?`;
-                    self.db.run(sql,[formData.maker, formData.model, formData.sn, formData.type, formData.description, formData.warranty, formData.purchaseDate, formData.location, formData.isTitle1, formData.isTitle9, formData.is31a, formData.tag], function(err) {
+                    let sql = `UPDATE psp_assets SET maker = ?, model = ?, sn = ?, type = ?, description = ?, warranty = ?, purchaseDate = ?, location = ?, bad = ?, isTitle1 = ?, isTitle9 = ?, is31a = ? WHERE tag = ?`;
+                    self.db.run(sql,[formData.maker, formData.model, formData.sn, formData.type, formData.description, formData.warranty, formData.purchaseDate, formData.location, formData.bad, formData.isTitle1, formData.isTitle9, formData.is31a, formData.tag], function(err) {
                         if (err) {
                             return console.log(err.message);
                         }
                     });
                 } else {
-                    self.db.run(`INSERT INTO psp_assets (maker,model,tag,sn,type,description,warranty,purchaseDate,location,isTitle1,isTitle9,is31a)
+                    self.db.run(`INSERT INTO psp_assets (maker,model,tag,sn,type,description,warranty,purchaseDate,location,bad,isTitle1,isTitle9,is31a)
                         VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-                        [formData.maker, formData.model, formData.tag, formData.sn, formData.type, formData.description, formData.warranty, formData.purchaseDate, formData.location, formData.isTitle1, formData.isTitle9, formData.is31a],
+                        [formData.maker, formData.model, formData.tag, formData.sn, formData.type, formData.description, formData.warranty, formData.purchaseDate, formData.location, formData.bad, formData.isTitle1, formData.isTitle9, formData.is31a],
                         function(err) {
                             if (err) {
                                 return console.log(err.message);
@@ -78,10 +70,6 @@ class DataHandler {
         });
     }
 
-    /**
-     * @param callback
-     * @desc Returns list of ALL assets in DB
-     */
     getAllAssets(callback) {
         this.db.all(`SELECT * FROM psp_assets`, function(err, rows) {
             let data = [];
@@ -94,11 +82,6 @@ class DataHandler {
         });
     }
 
-    /**
-     *
-     * @param assets
-     * @desc Not implemented yet.....
-     */
     deleteAssets(assets) {
         assets = JSON.parse(assets);
         for (let item of assets) {
@@ -107,12 +90,6 @@ class DataHandler {
         this.db.close();
     }
 
-    /**
-     *
-     * @param itemAttributes
-     * @param callback
-     * @desc Look for asset in DB
-     */
     queryData(itemAttributes, callback) {
         let assetFind = itemAttributes.split(',');
         let sql = `SELECT * FROM psp_assets WHERE ${assetFind[0]} = ?`;
@@ -129,13 +106,7 @@ class DataHandler {
         });
     }
 
-    /**
-     *
-     * @param data
-     * @param callback
-     * @desc Lookup item by asset tag and return true if exists
-     */
-    static queryTag(data, callback) {
+    queryTag(data, callback) {
         let sql = `SELECT * FROM psp_assets WHERE tag = ?`;
         this.db.all(sql, data, function(error, rows) {
             if (error) {
@@ -148,12 +119,6 @@ class DataHandler {
         });
     }
 
-    /**
-     *
-     * @param tag
-     * @param callback
-     * @desc Returns DB row of queried tag
-     */
     queryEditTag(tag, callback) {
         let sql = `SELECT * FROM psp_assets WHERE tag = ?`;
         this.db.get(sql, tag, function(error, rows) {
@@ -165,12 +130,6 @@ class DataHandler {
         });
     }
 
-    /**
-     *
-     * @param whichData
-     * @param callback
-     * @desc Loads initial asst info to populate form select pull downs
-     */
     static getAssetData(whichData, callback) {
         let filePath;
         if (whichData === "info") {
@@ -188,34 +147,16 @@ class DataHandler {
         });
     }
 
-    /**
-     *
-     * @param path
-     * @param contentType
-     * @param callback
-     * @param encoding
-     * @desc Finds and returns requested DOM file (ejs, html, js, css, png)
-     */
     static renderDom(path, contentType, callback, encoding) {
         FS.readFile(path, encoding ? encoding : `utf-8`, (error, string) => {
             callback(error, string, contentType);
         });
     }
 
-    /**
-     *
-     * @returns {Buffer | string}
-     * @desc Returns SSL key
-     */
     static getKey() {
         return FS.readFileSync(`data/encryption/key.pem`);
     }
 
-    /**
-     *
-     * @returns {Buffer | string}
-     * @desc Returns SSL cert
-     */
     static getCert() {
         return FS.readFileSync(`data/encryption/cert.pem`);
     }

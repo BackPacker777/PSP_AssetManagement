@@ -20,256 +20,21 @@ export default class EventHandler {
             self.handleAssetFindSubmit(whichData, findData);
         };
         this.handleAssetEntryBtn();
-        this.handleSplashScanBtn();
-        this.handleEnterAssetTag();
-        this.handleTitleCheckBoxes();
-        this.handleAssetSubmit();
         this.handleAssetFind();
         this.handleAssetList();
+        this.handleSplashScanBtn();
         this.handleDone();
-    }
-
-    /**
-     *
-     * @param whichData
-     * @param callback
-     * @desc Utility method for fetching DOM element data
-     */
-    populateAssetData(whichData, callback) {
-        fetch(document.url, {
-            method: 'POST',
-            body: null,
-            headers: {
-                'x-requested-with': `fetch.${whichData}`,
-                'mode': 'no-cors'
-            }
-        }).then((response) => {
-            return response.json();
-        }).then((data) => {
-            callback(data);
-        }).catch((error) => {
-            console.log(error);
-        });
     }
 
     /**
      *
      */
     handleAssetEntryBtn() {
-        document.getElementById(`assetEntryBtn`).addEventListener(`click`, () => {
+        document.getElementById(`assetEntryBtn`).addEventListener(`click`, (event) => {
+            event.stopImmediatePropagation();
             EventHandler.setDivDisplay([`assetEntryDiv`,`doneDiv`]);
             EventHandler.enableDisableInputs([`assetTag`]);
-        });
-    }
-
-    /**
-     *
-     */
-    handleSplashScanBtn() {
-        let self = this;
-        document.getElementById(`splashScanBtn`).addEventListener(`click`, () => {
-            EventHandler.setDivDisplay([`splashDiv`,`scannerContainer`]);
-            new BCScan((barCode) => {
-                console.log(barCode);
-                self.handleAssetFindSubmit('tag', barCode, true);
-            });
-        });
-    }
-
-    /**
-     *
-     */
-    handleEnterAssetTag() {
-        document.getElementById(`assetLocation`).value = '';
-        const MAX_TAG = 99999999;
-        document.getElementById(`assetTag`).addEventListener(`change`, () => {
-            let tagValue = Number(document.getElementById(`assetTag`).value);
-            if (tagValue > 0 && tagValue < MAX_TAG) {
-                fetch(document.url, {
-                    method: 'POST',
-                    body: tagValue,
-                    headers: {
-                        'x-requested-with': 'fetch.6',
-                        'mode': 'no-cors'
-                    }
-                }).then((response) => {
-                    return response.json();
-                }).then((tagExists) => {
-                    if (tagExists) {
-                        alert(`Tag number exists, please re-enter.`);
-                        document.getElementById(`assetMaker`).disabled = true;
-                        document.getElementById(`assetTag`).value = "";
-                    } else {
-                        EventHandler.enableDisableInputs([`assetTag`,`assetMaker`]);
-                        this.handleAssetMaker();
-                    }
-                }).catch((err) => {
-                    console.log(err);
-                });
-            } else {
-                alert(`Invalid number, please re-enter.`);
-                document.getElementById(`assetMaker`).disabled = true;
-                document.getElementById(`assetTag`).value = "";
-            }
-        });
-    }
-
-    /**
-     *
-     * @param assetProperties
-     */
-    handleAssetMaker(assetProperties) {
-        document.getElementById(`assetLocation`).value = '';
-        document.getElementById("assetMaker").options.length = 0;
-        let option = document.createElement("option");
-        option.text = `CHOOSE`;
-        option.value = `CHOOSE`;
-        document.getElementById("assetMaker").appendChild(option);
-        this.populateAssetData(4, (assetData) => {
-            for (let i = 0; i < assetData.length; i++) {
-                let option = document.createElement("option");
-                option.text = assetData[i][0];
-                option.value = assetData[i][0];
-                document.getElementById("assetMaker").appendChild(option);
-            }
-            if (assetProperties) {
-                document.getElementById("assetMaker").value = assetProperties.maker;
-                this.handleAssetType(assetData, assetProperties);
-            } else {
-                document.getElementById(`assetMaker`).addEventListener(`change`, (event) => {
-                    event.stopImmediatePropagation();
-                    let assetVendor = document.getElementById('assetMaker');
-                    let assetVendorValue = assetVendor.options[assetVendor.selectedIndex].value;
-                    EventHandler.enableDisableInputs([`assetTag`,`assetMaker`,`assetType`]);
-                    this.handleAssetType(assetData, assetVendorValue, null);
-                });
-            }
-        });
-    }
-
-    /**
-     *
-     * @param assetData
-     * @param assetVendorValue
-     * @param assetProperties
-     */
-    handleAssetType(assetData, assetVendorValue, assetProperties) {
-        document.getElementById(`assetLocation`).value = '';
-        document.getElementById("assetType").options.length = 0;
-        let option = document.createElement("option");
-        option.text = `CHOOSE`;
-        option.value = `CHOOSE`;
-        document.getElementById("assetType").appendChild(option);
-        for (let i = 0; i < assetData.length; i++) {
-            if (assetData[i][0] === assetVendorValue) {
-                for (let j = 1; j < assetData[i].length; j++) {
-                    let option = document.createElement("option");
-                    option.text = assetData[i][j];
-                    option.value = assetData[i][j];
-                    document.getElementById("assetType").appendChild(option);
-                }
-                break;
-            }
-        }
-        if (! assetProperties) {
-            document.getElementById(`assetType`).addEventListener(`change`, (event) => {
-                event.stopImmediatePropagation();
-                EventHandler.enableDisableInputs([`assetTag`,`assetMaker`,`assetType`,`serialNumber`,`assetModel`]);
-                let assetType = document.getElementById('assetType');
-                let assetTypeValue = assetType.options[assetType.selectedIndex].value;
-                this.handleAssetModel(assetTypeValue, null);
-            });
-        } else {
-            document.getElementById("assetType").value = assetProperties.type;
-            this.handleAssetModel(assetProperties);
-        }
-    }
-
-    /**
-     *
-     * @param assetTypeValue
-     * @param assetProperties
-     */
-    handleAssetModel(assetTypeValue, assetProperties) {
-        document.getElementById(`assetLocation`).value = '';
-        document.getElementById("assetModel").options.length = 0;
-        let option = document.createElement("option");
-        option.text = `CHOOSE`;
-        option.value = `CHOOSE`;
-        document.getElementById("assetModel").appendChild(option);
-        this.populateAssetData(5, (assetData) => {
-            for (let i = 0; i < assetData.length; i++) {
-                if (assetData[i][0] === assetTypeValue) {
-                    for (let j = 1; j < assetData[i].length; j++) {
-                        let option = document.createElement("option");
-                        option.text = assetData[i][j];
-                        option.value = assetData[i][j];
-                        document.getElementById("assetModel").appendChild(option);
-                    }
-                    break;
-                }
-            }
-            if (assetProperties) {
-                document.getElementById("assetModel").value = assetProperties.model;
-            }
-            this.handleEnterLocation();
-            EventHandler.enableDisableInputs([`assetTag`,`assetMaker`,`assetType`,`serialNumber`,`assetModel`,`assetLocation`]);
-        });
-    }
-
-    /**
-     *
-     */
-    handleEnterLocation() {
-        document.getElementById(`assetLocation`).addEventListener(`change`, () => {
-            if (!(/[0-9][0-9][0-9][clwshmxftz]/i).test(document.getElementById(`assetLocation`).value)) {
-                alert(`Incorrect location entered. Please try again Ding Dong!`);
-                document.getElementById(`assetLocation`).value = "";
-            } else {
-                EventHandler.setDivDisplay([`assetEntryDiv`,`doneDiv`,`assetTag`,`assetMaker`,`assetType`,`serialNumber`,`assetModel`,`assetDescription`,`assetLocation`,`purchaseDate`,`assetWarranty`]);
-                EventHandler.enableDisableInputs([`assetTag`,`assetMaker`,`assetType`,`serialNumber`,`assetModel`,`assetLocation`,`assetDescription`,`title1`,`title9`,`31a`,`assetSubmit`,`purchaseDate`,`assetWarranty`]);
-            }
-        });
-    }
-
-    /**
-     *
-     */
-    handleTitleCheckBoxes() {
-        this.title1 = 0;
-        this.title9 = 0;
-        this.thirtyOneA = 0;
-        let checkBoxes = document.getElementsByName('titleCheckBox');
-        for (let i = 0; i < checkBoxes.length; i++) {
-            let boxValue = null;
-            checkBoxes[i].addEventListener(`click`, () => {
-                if (checkBoxes[i].checked) {
-                    boxValue = 1;
-                } else {
-                    boxValue = 0;
-                }
-                if (checkBoxes[i].id === 'title1') {
-                    this.title1 = boxValue;
-                } else if (checkBoxes[i].id === 'title9') {
-                    this.title9 = boxValue;
-                } else {
-                    this.thirtyOneA = boxValue;
-                }
-            });
-        }
-    }
-
-    /**
-     *
-     */
-    handleDone() {
-        document.getElementById(`doneBtn`).addEventListener(`click`, () => {
-            document.getElementById('assetListDivResults').innerHTML = ``;
-            document.getElementById(`assetEntryForm`).reset();
-            document.getElementById(`assetFindForm`).reset();
-            EventHandler.setDivDisplay([`splashDiv`,`splashScanDiv`]);
-            EventHandler.enableDisableInputs([`assetEntryBtn`,`assetFindBtn`,`assetListBtn`,`installBtn`,`splashScanBtn`]);
-            EventHandler.setDivDisplay([`splashDiv`, `splashScanDiv`]);
+            this.handleEnterAssetTag();
         });
     }
 
@@ -278,7 +43,8 @@ export default class EventHandler {
      */
     handleAssetFind() {
         self = this;
-        document.getElementById(`assetFindBtn`).addEventListener(`click`, () => {
+        document.getElementById(`assetFindBtn`).addEventListener(`click`, (event) => {
+            event.stopImmediatePropagation();
             let findDivs = [`findAssetModel`,`findAssetMaker`];
             for (let div of findDivs) {
                 document.getElementById(div).options.length = 0;
@@ -312,7 +78,8 @@ export default class EventHandler {
             let doSubmit = function(whichData) {
                 self.handleAssetFindSubmit(whichData, findData);
             };
-            document.getElementById("findAssetMaker").addEventListener('change', () => {
+            document.getElementById("findAssetMaker").addEventListener('change', (event) => {
+                event.stopImmediatePropagation();
                 let findAssetMaker = document.getElementById('findAssetMaker');
                 let findAssetMakerValue = findAssetMaker.options[findAssetMaker.selectedIndex].value;
                 if (findAssetMakerValue !== 'CHOOSE') {
@@ -322,7 +89,8 @@ export default class EventHandler {
                     findData = null;
                 }
             });
-            document.getElementById("findAssetModel").addEventListener('change', () => {
+            document.getElementById("findAssetModel").addEventListener('change', (event) => {
+                event.stopImmediatePropagation();
                 let findAssetModel = document.getElementById('findAssetModel');
                 let findAssetModelValue = findAssetModel.options[findAssetModel.selectedIndex].value;
                 if (findAssetModelValue !== 'CHOOSE') {
@@ -332,7 +100,8 @@ export default class EventHandler {
                     findData = null;
                 }
             });
-            document.getElementById("findAssetTag").addEventListener('change', () => {
+            document.getElementById("findAssetTag").addEventListener('change', (event) => {
+                event.stopImmediatePropagation();
                 if (document.getElementById("findAssetTag").value) {
                     findData = document.getElementById("findAssetTag").value;
                     doSubmit('tag', findData);
@@ -340,7 +109,8 @@ export default class EventHandler {
                     findData = null;
                 }
             });
-            document.getElementById("findAssetLocation").addEventListener('change', () => {
+            document.getElementById("findAssetLocation").addEventListener('change', (event) => {
+                event.stopImmediatePropagation();
                 if (document.getElementById("findAssetLocation").value) {
                     findData = document.getElementById("findAssetLocation").value;
                     doSubmit('location', findData);
@@ -389,11 +159,12 @@ export default class EventHandler {
     }
 
     /**
-     *
+     * @desc
      */
     handleAssetList() {
         let self = this;
-        document.getElementById(`assetListBtn`).addEventListener(`click`, () => {
+        document.getElementById(`assetListBtn`).addEventListener(`click`, (event) => {
+            event.stopImmediatePropagation();
             EventHandler.setDivDisplay([`assetListDiv`, `assetListDivResults`, `doneDiv`]);
             fetch(document.url, {
                 method: 'POST',
@@ -428,7 +199,8 @@ export default class EventHandler {
                 newRow.style.backgroundColor = 'gray';
             }
             document.getElementById('assetListDivResults').appendChild(newRow);
-            newRow.addEventListener('click', () => {
+            newRow.addEventListener('click', (event) => {
+                event.stopImmediatePropagation();
                 let tagParent = event.currentTarget.id;
                 let tagNumber = tagParent.slice(10);
                 this.handleAssetEdit(tagNumber);
@@ -454,6 +226,229 @@ export default class EventHandler {
 
     /**
      *
+     */
+    handleSplashScanBtn() {
+        let self = this;
+        document.getElementById(`splashScanBtn`).addEventListener(`click`, (event) => {
+            event.stopImmediatePropagation();
+            EventHandler.setDivDisplay([`splashDiv`,`scannerContainer`]);
+            BCScan.startBCScanner((barCode) => {
+                self.handleAssetFindSubmit('tag', barCode, true);
+            });
+        });
+    }
+
+    /**
+     *
+     */
+    handleEnterAssetTag() {
+        document.getElementById(`assetLocation`).value = '';
+        const MAX_TAG = 99999999;
+        document.getElementById(`assetTag`).addEventListener(`change`, (event) => {
+            event.stopImmediatePropagation();
+            let tagValue = Number(document.getElementById(`assetTag`).value);
+            if (tagValue > 0 && tagValue < MAX_TAG) {
+                fetch(document.url, {
+                    method: 'POST',
+                    body: tagValue,
+                    headers: {
+                        'x-requested-with': 'fetch.6',
+                        'mode': 'no-cors'
+                    }
+                }).then((response) => {
+                    return response.json();
+                }).then((tagExists) => {
+                    if (tagExists) {
+                        alert(`Tag number exists, please re-enter.`);
+                        document.getElementById(`assetMaker`).disabled = true;
+                        document.getElementById(`assetTag`).value = "";
+                    } else {
+                        EventHandler.enableDisableInputs([`assetTag`,`assetMaker`]);
+                        this.handleAssetMaker();
+                    }
+                }).catch((err) => {
+                    console.log(err);
+                });
+            } else {
+                alert(`Invalid number, please re-enter.`);
+                document.getElementById(`assetMaker`).disabled = true;
+                document.getElementById(`assetTag`).value = "";
+            }
+        });
+    }
+
+    /**
+     *
+     * @param assetProperties
+     */
+    handleAssetMaker(assetProperties) {
+        document.getElementById("assetMaker").options.length = 0;
+        let option = document.createElement("option");
+        option.text = `CHOOSE`;
+        option.value = `CHOOSE`;
+        document.getElementById("assetMaker").appendChild(option);
+        this.populateAssetData(4, (assetData) => {
+            for (let i = 0; i < assetData.length; i++) {
+                let option = document.createElement("option");
+                option.text = assetData[i][0];
+                option.value = assetData[i][0];
+                document.getElementById("assetMaker").appendChild(option);
+            }
+            if (assetProperties) {
+                document.getElementById("assetMaker").value = assetProperties.maker;
+                let assetVendorValue = assetProperties.maker;
+                this.handleAssetType(assetData, assetVendorValue, assetProperties);
+            } else {
+                document.getElementById(`assetLocation`).value = '';
+                document.getElementById(`assetMaker`).addEventListener(`change`, (event) => {
+                    event.stopImmediatePropagation();
+                    let assetVendor = document.getElementById('assetMaker');
+                    let assetVendorValue = assetVendor.options[assetVendor.selectedIndex].value;
+                    EventHandler.enableDisableInputs([`assetTag`,`assetMaker`,`assetType`]);
+                    this.handleAssetType(assetData, assetVendorValue, null);
+                });
+            }
+        });
+    }
+
+    /**
+     *
+     * @param assetData
+     * @param assetVendorValue
+     * @param assetProperties
+     */
+    handleAssetType(assetData, assetVendorValue, assetProperties) {
+        document.getElementById("assetType").options.length = 0;
+        let option = document.createElement("option");
+        option.text = `CHOOSE`;
+        option.value = `CHOOSE`;
+        document.getElementById("assetType").appendChild(option);
+        for (let i = 0; i < assetData.length; i++) {
+            if (assetData[i][0] === assetVendorValue) {
+                for (let j = 1; j < assetData[i].length; j++) {
+                    let option = document.createElement("option");
+                    option.text = assetData[i][j];
+                    option.value = assetData[i][j];
+                    document.getElementById("assetType").appendChild(option);
+                }
+                break;
+            }
+        }
+        if (assetProperties) {
+            document.getElementById("assetType").value = assetProperties.type;
+            let assetTypeValue = assetProperties.type;
+            this.handleAssetModel(assetTypeValue, assetProperties);
+        } else {
+            document.getElementById(`assetLocation`).value = '';
+            document.getElementById(`assetType`).addEventListener(`change`, (event) => {
+                event.stopImmediatePropagation();
+                EventHandler.enableDisableInputs([`assetTag`,`assetMaker`,`assetType`,`serialNumber`,`assetModel`]);
+                let assetType = document.getElementById('assetType');
+                let assetTypeValue = assetType.options[assetType.selectedIndex].value;
+                this.handleAssetModel(assetTypeValue, null);
+            });
+        }
+    }
+
+    /**
+     *
+     * @param assetTypeValue
+     * @param assetProperties
+     */
+    handleAssetModel(assetTypeValue, assetProperties) {
+        document.getElementById("assetModel").options.length = 0;
+        let option = document.createElement("option");
+        option.text = `CHOOSE`;
+        option.value = `CHOOSE`;
+        document.getElementById("assetModel").appendChild(option);
+        this.populateAssetData(5, (assetData) => {
+            for (let i = 0; i < assetData.length; i++) {
+                if (assetData[i][0] === assetTypeValue) {
+                    for (let j = 1; j < assetData[i].length; j++) {
+                        let option = document.createElement("option");
+                        option.text = assetData[i][j];
+                        option.value = assetData[i][j];
+                        document.getElementById("assetModel").appendChild(option);
+                    }
+                    break;
+                }
+            }
+            if (assetProperties) {
+                document.getElementById("assetModel").value = assetProperties.model;
+            } else {
+                document.getElementById(`assetLocation`).value = '';
+                this.handleEnterLocation();
+                EventHandler.enableDisableInputs([`assetTag`,`assetMaker`,`assetType`,`serialNumber`,`assetModel`,`assetLocation`]);
+            }
+        });
+    }
+
+    /**
+     *
+     */
+    handleEnterLocation() {
+        document.getElementById(`assetLocation`).addEventListener(`change`, (event) => {
+            event.stopImmediatePropagation();
+            if (!(/[0-9][0-9][0-9][clwshmxftz]/i).test(document.getElementById(`assetLocation`).value)) {
+                alert(`Incorrect location entered. Please try again Ding Dong!`);
+                document.getElementById(`assetLocation`).value = "";
+            } else {
+                EventHandler.setDivDisplay([`assetEntryDiv`,`doneDiv`,`assetTag`,`assetMaker`,`assetType`,`serialNumber`,`assetModel`,`assetDescription`,`assetLocation`,`purchaseDate`,`assetWarranty`]);
+                EventHandler.enableDisableInputs([`assetTag`,`assetMaker`,`assetType`,`serialNumber`,`assetModel`,`assetLocation`,`assetDescription`,`title1`,`title9`,`31a`,`assetSubmit`,`purchaseDate`,`assetWarranty`]);
+                this.handleTitleCheckBoxes();
+                this.handleAssetSubmit();
+            }
+        });
+    }
+
+    /**
+     *
+     */
+    handleTitleCheckBoxes() {
+        this.bad = 0;
+        this.title1 = 0;
+        this.title9 = 0;
+        this.thirtyOneA = 0;
+        let checkBoxes = document.getElementsByName('titleCheckBox');
+        for (let i = 0; i < checkBoxes.length; i++) {
+            let boxValue = null;
+            checkBoxes[i].addEventListener(`click`, (event) => {
+                event.stopImmediatePropagation();
+                if (checkBoxes[i].checked) {
+                    boxValue = 1;
+                } else {
+                    boxValue = 0;
+                }
+                if (checkBoxes[i].id === 'bad') {
+                    this.bad = boxValue;
+                } else if (checkBoxes[i].id === 'title1') {
+                    this.title1 = boxValue;
+                } else if (checkBoxes[i].id === 'title9') {
+                    this.title9 = boxValue;
+                } else {
+                    this.thirtyOneA = boxValue;
+                }
+            });
+        }
+    }
+
+    /**
+     *
+     */
+    handleDone() {
+        document.getElementById(`doneBtn`).addEventListener(`click`, (event) => {
+            event.stopImmediatePropagation();
+            document.getElementById('assetListDivResults').innerHTML = ``;
+            document.getElementById(`assetEntryForm`).reset();
+            document.getElementById(`assetFindForm`).reset();
+            EventHandler.setDivDisplay([`splashDiv`,`splashScanDiv`]);
+            EventHandler.enableDisableInputs([`assetEntryBtn`,`assetFindBtn`,`assetListBtn`,`installBtn`,`splashScanBtn`]);
+            EventHandler.setDivDisplay([`splashDiv`, `splashScanDiv`]);
+        });
+    }
+
+    /**
+     *
      * @param tagNumber
      */
     handleAssetEdit(tagNumber) {
@@ -470,25 +465,30 @@ export default class EventHandler {
             return response.json();
         }).then((assetProperties) => {
             EventHandler.setDivDisplay([`assetEntryDiv`,`doneDiv`]);
-            EventHandler.enableDisableInputs([`assetMaker`,`assetType`,`serialNumber`,`assetModel`,`assetDescription`,`assetLocation`,`purchaseDate`,`assetWarranty`,`title1`,`title9`,`31a`,`assetSubmit`]);
-            this.handleAssetMaker(assetProperties);
+            EventHandler.enableDisableInputs([`assetTag`,`assetMaker`,`assetType`,`serialNumber`,`assetModel`,`assetDescription`,`assetLocation`,`purchaseDate`,`assetWarranty`,`bad`,`title1`,`title9`,`31a`,`assetSubmit`]);
 
             document.getElementById('assetTag').value = assetProperties.tag;
+            document.getElementById('assetLocation').value = assetProperties.location;
             document.getElementById('serialNumber').value = assetProperties.sn;
             document.getElementById('assetDescription').value = assetProperties.description;
-            document.getElementById('assetLocation').value = assetProperties.location;
+            document.getElementById('assetLocation').removeAttribute('placeholder');
+
+            console.log(document.getElementById('assetLocation').value);
             document.getElementById('purchaseDate').value = assetProperties.purchaseDate;
             document.getElementById('assetWarranty').value = assetProperties.warranty;
+            document.getElementById('title1').value = assetProperties.bad;
             document.getElementById('title1').value = assetProperties.isTitle1;
             document.getElementById('title9').value = assetProperties.isTitle9;
             document.getElementById('31a').value = assetProperties.is31a;
+
+            this.handleAssetMaker(assetProperties);
         }).catch((err) => {
             console.log(err);
         });
     }
 
     /**
-     *
+     * @desc Primary Fetch method
      */
     sendFormData() {
         let formData = new FormData();
@@ -524,7 +524,8 @@ export default class EventHandler {
      *
      */
     handleAssetSubmit() {
-        document.getElementById(`assetSubmit`).addEventListener(`click`, () => {
+        document.getElementById(`assetSubmit`).addEventListener(`click`, (event) => {
+            event.stopImmediatePropagation();
             if (document.forms['assetEntryForm'].checkValidity()) {
                 this.sendFormData();
                 document.getElementById('happyFace').style.display = 'none';
@@ -537,6 +538,29 @@ export default class EventHandler {
             } else {
                 document.forms['assetEntryForm'].reportValidity();
             }
+        });
+    }
+
+    /**
+     *
+     * @param whichData
+     * @param callback
+     * @desc Utility method for fetching DOM element data
+     */
+    populateAssetData(whichData, callback) {
+        fetch(document.url, {
+            method: 'POST',
+            body: null,
+            headers: {
+                'x-requested-with': `fetch.${whichData}`,
+                'mode': 'no-cors'
+            }
+        }).then((response) => {
+            return response.json();
+        }).then((data) => {
+            callback(data);
+        }).catch((error) => {
+            console.log(error);
         });
     }
 

@@ -17,10 +17,10 @@
   "dependencies": {
     "ejs": "latest",
     "formidable": "latest",
-    "jsdoc": "^3.5.5",
+    "jsdoc": "latest",
     "node-sass": "latest",
     "quagga": "latest",
-    "sqlite3": "^4.0.6"
+    "sqlite3": "latest"
   },
   "bin": {
     "PSP_AssetManagerApp": "asset_server"

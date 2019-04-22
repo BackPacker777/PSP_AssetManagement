@@ -4,6 +4,8 @@
  * @module BCScan
  */
 
+// import Quagga from './quagga.js';
+
 /**
  * @desc Class for interacting with Quagga and the DOM
  */
@@ -13,7 +15,6 @@ export default class BCScan {
      * @param callback
      */
     constructor(callback) {
-        this.barCode = 0;
         this.startBCScanner(callback);
     }
 
@@ -21,7 +22,7 @@ export default class BCScan {
      *
      * @param callback
      */
-    startBCScanner(callback) {
+    static startBCScanner(callback) {
         Quagga.init({
             inputStream : {
                 name : "Live",
@@ -69,9 +70,10 @@ export default class BCScan {
                     }
                 }*/
             },
+            multiple: false,
             locator: {
                 halfSample: true,
-                patchSize: "medium"
+                patchSize: "large"
             }
         }, function(err) {
             if (err) {
@@ -107,9 +109,9 @@ export default class BCScan {
         });
 
         Quagga.onDetected((result) => {
-            this.barCode = result.codeResult.code;
+            let barCode = result.codeResult.code;
             Quagga.stop();
-            callback(this.barCode);
+            callback(barCode);
         });
     }
 }

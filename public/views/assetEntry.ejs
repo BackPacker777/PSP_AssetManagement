@@ -34,7 +34,7 @@
         <div class="grid-x grid-padding-x">
             <div class="cell large-6 small-12">
                 <span class="label">Asset Location</span>
-                <input type="text" id="assetLocation" placeholder="000Z" required style="text-transform: uppercase;">
+                <input type="text" id="assetLocation" placeholder="000Z" required style="text-transform: uppercase;" maxlength="4">
             </div>
             <div class="cell large-6 small-12">
                 <span class="label">Asset Description</span>
@@ -52,15 +52,19 @@
             </div>
         </div>
         <div class="grid-x grid-padding-x text-center">
-            <div class="cell large-4 small-4">
+            <div class="cell large-3 small-3">
+                <span class="label alert">Bad</span>
+                <input type="checkbox" value="1" id="bad" name="titleCheckBox">
+            </div>
+            <div class="cell large-3 small-3">
                 <span class="label">Title 1</span>
                 <input type="checkbox" value="1" id="title1" name="titleCheckBox">
             </div>
-            <div class="cell large-4 small-4">
+            <div class="cell large-3 small-3">
                 <span class="label">Title 9</span>
                 <input type="checkbox" value="1" id="title9" name="titleCheckBox">
             </div>
-            <div class="cell large-4 small-4">
+            <div class="cell large-3 small-3">
                 <span class="label">31a</span>
                 <input type="checkbox" value="1" id="31a" name="titleCheckBox">
             </div>

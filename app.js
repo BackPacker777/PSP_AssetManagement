@@ -119,7 +119,7 @@ class app {
                         next(err);
                     }).on('end', () => {
                         body = Buffer.concat(body).toString();
-                        DATA_HANDLER.queryTag(body, function (tagExists) {
+                        this.data_handler.queryTag(body, function (tagExists) {
                             response.setHeader('Cache-Control', 'max-age=86400');
                             response.writeHead(200, {'content-type': 'text/plain'});
                             response.end(JSON.stringify(tagExists));
