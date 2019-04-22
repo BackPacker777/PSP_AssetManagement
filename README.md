@@ -1,4 +1,4 @@
-## ToDo:
+## Todo:
 * Delete capability?
 * Add building maps for clicking to see inventory
 * Finish JSDoc in EventHandler & BCScan
