@@ -6,7 +6,6 @@
 * Fix scanning duplicating results
 * Add event listeners to find result selection boxes
 
-
 ## Completed:
 * ~~Add 'edit/update item' functionality~~
 * ~~Fix item find~~
