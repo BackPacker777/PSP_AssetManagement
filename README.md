@@ -1,10 +1,13 @@
 ## Todo:
-* Delete capability?
-* Add building maps for clicking to see inventory
 * Finish JSDoc in EventHandler & BCScan
 * Fix 'certificate not found' error
 * Fix scanning duplicating results
 * Add event listeners to find result selection boxes
+
+## Feature adds:
+* Delete capability?
+* Add building maps for clicking to see inventory
+* Enable PWA stuff
 
 ## Completed:
 * ~~Add 'edit/update item' functionality~~
