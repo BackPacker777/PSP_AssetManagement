@@ -50,15 +50,15 @@ class DataHandler {
             this.db.get(`SELECT * FROM psp_assets WHERE tag = ?`, formData.tag, function(err, row) {
                 if (row) {
                     let sql = `UPDATE psp_assets SET maker = ?, model = ?, sn = ?, type = ?, description = ?, warranty = ?, purchaseDate = ?, location = ?, bad = ?, isTitle1 = ?, isTitle9 = ?, is31a = ? WHERE tag = ?`;
-                    self.db.run(sql,[formData.maker, formData.model, formData.sn, formData.type, formData.description, formData.warranty, formData.purchaseDate, formData.location, formData.bad, formData.isTitle1, formData.isTitle9, formData.is31a, formData.tag], function(err) {
+                    self.db.run(sql,[formData.maker, formData.model, formData.sn, formData.type, formData.description, formData.warranty, formData.purchaseDate, formData.location, formData.isBad, formData.isTitle1, formData.isTitle9, formData.is31a, formData.tag], function(err) {
                         if (err) {
                             return console.log(err.message);
                         }
                     });
                 } else {
                     self.db.run(`INSERT INTO psp_assets (maker,model,tag,sn,type,description,warranty,purchaseDate,location,bad,isTitle1,isTitle9,is31a)
-                        VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-                        [formData.maker, formData.model, formData.tag, formData.sn, formData.type, formData.description, formData.warranty, formData.purchaseDate, formData.location, formData.bad, formData.isTitle1, formData.isTitle9, formData.is31a],
+                        VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                        [formData.maker, formData.model, formData.tag, formData.sn, formData.type, formData.description, formData.warranty, formData.purchaseDate, formData.location, formData.isBad, formData.isTitle1, formData.isTitle9, formData.is31a],
                         function(err) {
                             if (err) {
                                 return console.log(err.message);

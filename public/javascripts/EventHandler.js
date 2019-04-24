@@ -23,7 +23,9 @@ export default class EventHandler {
         this.handleAssetFind();
         this.handleAssetList();
         this.handleSplashScanBtn();
+        // this.handleTitleCheckBoxes();
         this.handleDone();
+        this.handleAssetSubmit();
     }
 
     /**
@@ -228,11 +230,15 @@ export default class EventHandler {
      *
      */
     handleSplashScanBtn() {
+        let counter = 0;
         let self = this;
         document.getElementById(`splashScanBtn`).addEventListener(`click`, (event) => {
             event.stopImmediatePropagation();
             EventHandler.setDivDisplay([`splashDiv`,`scannerContainer`]);
+            // self.handleAssetFindSubmit('tag', 1118, true);
             BCScan.startBCScanner((barCode) => {
+                counter++;
+                console.log(counter);
                 self.handleAssetFindSubmit('tag', barCode, true);
             });
         });
@@ -298,16 +304,18 @@ export default class EventHandler {
                 document.getElementById("assetMaker").value = assetProperties.maker;
                 let assetVendorValue = assetProperties.maker;
                 this.handleAssetType(assetData, assetVendorValue, assetProperties);
+                EventHandler.enableDisableInputs([`assetTag`,`assetMaker`,`assetType`,`serialNumber`,`assetModel`,`assetDescription`,`assetLocation`,`purchaseDate`,`assetWarranty`,`bad`,`title1`,`title9`,`31a`,`assetSubmit`]);
+
             } else {
                 document.getElementById(`assetLocation`).value = '';
-                document.getElementById(`assetMaker`).addEventListener(`change`, (event) => {
-                    event.stopImmediatePropagation();
-                    let assetVendor = document.getElementById('assetMaker');
-                    let assetVendorValue = assetVendor.options[assetVendor.selectedIndex].value;
-                    EventHandler.enableDisableInputs([`assetTag`,`assetMaker`,`assetType`]);
-                    this.handleAssetType(assetData, assetVendorValue, null);
-                });
+                EventHandler.enableDisableInputs([`assetTag`,`assetMaker`,`assetType`]);
             }
+            document.getElementById(`assetMaker`).addEventListener(`change`, (event) => {
+                event.stopImmediatePropagation();
+                let assetVendor = document.getElementById('assetMaker');
+                let assetVendorValue = assetVendor.options[assetVendor.selectedIndex].value;
+                this.handleAssetType(assetData, assetVendorValue, null);
+            });
         });
     }
 
@@ -340,14 +348,14 @@ export default class EventHandler {
             this.handleAssetModel(assetTypeValue, assetProperties);
         } else {
             document.getElementById(`assetLocation`).value = '';
-            document.getElementById(`assetType`).addEventListener(`change`, (event) => {
-                event.stopImmediatePropagation();
-                EventHandler.enableDisableInputs([`assetTag`,`assetMaker`,`assetType`,`serialNumber`,`assetModel`]);
-                let assetType = document.getElementById('assetType');
-                let assetTypeValue = assetType.options[assetType.selectedIndex].value;
-                this.handleAssetModel(assetTypeValue, null);
-            });
+            EventHandler.enableDisableInputs([`assetTag`,`assetMaker`,`assetType`,`serialNumber`,`assetModel`]);
         }
+        document.getElementById(`assetType`).addEventListener(`change`, (event) => {
+            event.stopImmediatePropagation();
+            let assetType = document.getElementById('assetType');
+            let assetTypeValue = assetType.options[assetType.selectedIndex].value;
+            this.handleAssetModel(assetTypeValue, null);
+        });
     }
 
     /**
@@ -377,9 +385,9 @@ export default class EventHandler {
                 document.getElementById("assetModel").value = assetProperties.model;
             } else {
                 document.getElementById(`assetLocation`).value = '';
-                this.handleEnterLocation();
                 EventHandler.enableDisableInputs([`assetTag`,`assetMaker`,`assetType`,`serialNumber`,`assetModel`,`assetLocation`]);
             }
+            this.handleEnterLocation();
         });
     }
 
@@ -394,17 +402,15 @@ export default class EventHandler {
                 document.getElementById(`assetLocation`).value = "";
             } else {
                 EventHandler.setDivDisplay([`assetEntryDiv`,`doneDiv`,`assetTag`,`assetMaker`,`assetType`,`serialNumber`,`assetModel`,`assetDescription`,`assetLocation`,`purchaseDate`,`assetWarranty`]);
-                EventHandler.enableDisableInputs([`assetTag`,`assetMaker`,`assetType`,`serialNumber`,`assetModel`,`assetLocation`,`assetDescription`,`title1`,`title9`,`31a`,`assetSubmit`,`purchaseDate`,`assetWarranty`]);
-                this.handleTitleCheckBoxes();
+                EventHandler.enableDisableInputs([`assetTag`,`assetMaker`,`assetType`,`serialNumber`,`assetModel`,`assetLocation`,`assetDescription`,`bad`,`title1`,`title9`,`31a`,`assetSubmit`,`purchaseDate`,`assetWarranty`]);
                 this.handleAssetSubmit();
             }
         });
     }
 
-    /**
-     *
-     */
-    handleTitleCheckBoxes() {
+
+    /*handleTitleCheckBoxes() {
+        let self = this;
         this.bad = 0;
         this.title1 = 0;
         this.title9 = 0;
@@ -420,17 +426,18 @@ export default class EventHandler {
                     boxValue = 0;
                 }
                 if (checkBoxes[i].id === 'bad') {
-                    this.bad = boxValue;
+                    self.bad = boxValue;
                 } else if (checkBoxes[i].id === 'title1') {
-                    this.title1 = boxValue;
+                    self.title1 = boxValue;
                 } else if (checkBoxes[i].id === 'title9') {
-                    this.title9 = boxValue;
+                    self.title9 = boxValue;
                 } else {
-                    this.thirtyOneA = boxValue;
+                    self.thirtyOneA = boxValue;
                 }
+                console.log(self.bad);
             });
         }
-    }
+    }*/
 
     /**
      *
@@ -471,16 +478,20 @@ export default class EventHandler {
             document.getElementById('assetLocation').value = assetProperties.location;
             document.getElementById('serialNumber').value = assetProperties.sn;
             document.getElementById('assetDescription').value = assetProperties.description;
-            document.getElementById('assetLocation').removeAttribute('placeholder');
-
-            console.log(document.getElementById('assetLocation').value);
             document.getElementById('purchaseDate').value = assetProperties.purchaseDate;
             document.getElementById('assetWarranty').value = assetProperties.warranty;
-            document.getElementById('title1').value = assetProperties.bad;
-            document.getElementById('title1').value = assetProperties.isTitle1;
-            document.getElementById('title9').value = assetProperties.isTitle9;
-            document.getElementById('31a').value = assetProperties.is31a;
-
+            if (Number(assetProperties.bad) === 1) {
+                document.getElementById('bad').checked = true;
+            }
+            if (Number(assetProperties.isTitle1) === 1) {
+                document.getElementById('title1').checked = true;
+            }
+            if (Number(assetProperties.isTitle9) === 1) {
+                document.getElementById('title9').checked = true;
+            }
+            if (Number(assetProperties.is31a) === 1) {
+                document.getElementById('31a').checked = true;
+            }
             this.handleAssetMaker(assetProperties);
         }).catch((err) => {
             console.log(err);
@@ -501,9 +512,10 @@ export default class EventHandler {
         formData.append('warranty', document.getElementById('assetWarranty').value);
         formData.append('purchaseDate', document.getElementById('purchaseDate').value);
         formData.append('location', document.getElementById('assetLocation').value);
-        formData.append('isTitle1', this.title1);
-        formData.append('isTitle9', this.title9);
-        formData.append('is31a', this.thirtyOneA);
+        formData.append('isBad', document.getElementById('bad').value);
+        formData.append('isTitle1', document.getElementById('title1').value);
+        formData.append('isTitle9', document.getElementById('title9').value);
+        formData.append('is31a', document.getElementById('31a').value);
         fetch(document.url, {
             method: 'POST',
             body: formData,
@@ -569,7 +581,7 @@ export default class EventHandler {
      * @param inputs
      */
     static enableDisableInputs(inputs) {
-        const INPUTS = [`assetTag`,`assetMaker`,`assetType`,`serialNumber`,`assetModel`,`assetDescription`,`assetLocation`,`purchaseDate`,`assetWarranty`,`title1`,`title9`,`31a`,`findAssetMaker`,`findAssetModel`,`findAssetTag`,`findAssetLocation`,`assetEntryBtn`,`assetFindBtn`,`assetListBtn`,`installBtn`,`splashScanBtn`];
+        const INPUTS = [`assetTag`,`assetMaker`,`assetType`,`serialNumber`,`assetModel`,`assetDescription`,`assetLocation`,`purchaseDate`,`assetWarranty`,`bad`,`title1`,`title9`,`31a`,`assetSubmit`,`findAssetMaker`,`findAssetModel`,`findAssetTag`,`findAssetLocation`,`assetEntryBtn`,`assetFindBtn`,`assetListBtn`,`installBtn`,`splashScanBtn`];
         for (let index of INPUTS) {
             document.getElementById(index).disabled = true;
         }

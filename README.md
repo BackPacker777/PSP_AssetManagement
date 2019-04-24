@@ -2,7 +2,6 @@
 * Finish JSDoc in EventHandler & BCScan
 * Fix 'certificate not found' error
 * Fix scanning duplicating results
-* Add event listeners to find result selection boxes
 
 ## Feature adds:
 * Delete capability?
@@ -20,6 +19,8 @@
 * ~~Investigate scanning capability~~
 * ~~Add damaged checkbox~~
 * ~~Fix scan/find edit not populating select box options~~
+* ~~Add event listeners to find result selection boxes~~
+* ~~Fix checkboxes~~
 
 ##Stuff:
 * https://stackoverflow.com/questions/21397809/create-a-trusted-self-signed-ssl-cert-for-localhost-for-use-with-express-node

@@ -12,11 +12,8 @@
 export default class BCScan {
     /**
      *
-     * @param callback
      */
-    constructor(callback) {
-        this.startBCScanner(callback);
-    }
+    constructor() {}
 
     /**
      *
