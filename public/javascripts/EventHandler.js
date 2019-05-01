@@ -23,7 +23,7 @@ export default class EventHandler {
         this.handleAssetFind();
         this.handleAssetList();
         this.handleSplashScanBtn();
-        // this.handleTitleCheckBoxes();
+        this.handleTitleCheckBoxes();
         this.handleDone();
         this.handleAssetSubmit();
     }
@@ -161,7 +161,7 @@ export default class EventHandler {
     }
 
     /**
-     * @desc
+     * @desc Grabs assets from DB
      */
     handleAssetList() {
         let self = this;
@@ -409,7 +409,7 @@ export default class EventHandler {
     }
 
 
-    /*handleTitleCheckBoxes() {
+    handleTitleCheckBoxes() {
         let self = this;
         this.bad = 0;
         this.title1 = 0;
@@ -420,24 +420,30 @@ export default class EventHandler {
             let boxValue = null;
             checkBoxes[i].addEventListener(`click`, (event) => {
                 event.stopImmediatePropagation();
-                if (checkBoxes[i].checked) {
-                    boxValue = 1;
+                if (document.getElementById('bad').checked === true) {
+                    self.bad = 1;
                 } else {
-                    boxValue = 0;
+                    self.bad = 0;
                 }
-                if (checkBoxes[i].id === 'bad') {
-                    self.bad = boxValue;
-                } else if (checkBoxes[i].id === 'title1') {
-                    self.title1 = boxValue;
-                } else if (checkBoxes[i].id === 'title9') {
-                    self.title9 = boxValue;
+                if (document.getElementById('title1').checked === true) {
+                    self.title1 = 1;
                 } else {
-                    self.thirtyOneA = boxValue;
+                    self.title1 = 0;
                 }
-                console.log(self.bad);
+                if (document.getElementById('title9').checked === true) {
+                    self.title9 = 1;
+                } else {
+                    self.title9 = 0;
+                }
+                if (document.getElementById('31a').checked === true) {
+                    self.thirtyOneA = 1;
+                } else {
+                    self.thirtyOneA = 0;
+                }
+                // console.log(self.bad);
             });
         }
-    }*/
+    }
 
     /**
      *
@@ -512,10 +518,10 @@ export default class EventHandler {
         formData.append('warranty', document.getElementById('assetWarranty').value);
         formData.append('purchaseDate', document.getElementById('purchaseDate').value);
         formData.append('location', document.getElementById('assetLocation').value);
-        formData.append('isBad', document.getElementById('bad').value);
-        formData.append('isTitle1', document.getElementById('title1').value);
-        formData.append('isTitle9', document.getElementById('title9').value);
-        formData.append('is31a', document.getElementById('31a').value);
+        formData.append('isBad', this.bad);
+        formData.append('isTitle1', this.title1);
+        formData.append('isTitle9', this.title9);
+        formData.append('is31a', this.thirtyOneA);
         fetch(document.url, {
             method: 'POST',
             body: formData,
