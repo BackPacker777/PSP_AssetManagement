@@ -1,0 +1,88 @@
+    <form id="assetEntryForm">  <!-- https://stackoverflow.com/a/31427586/466246 -->
+        <div class="grid-x grid-padding-x">
+            <div class="cell large-6 small-6">
+                <span class="label">Asset Tag</span>
+                <input type="number" id="assetTag" maxlength="10" required>
+            </div>
+            <div class="cell large-6 small-6">
+                <span class="label">Asset Maker</span>
+                <select id="assetMaker" required>
+                    <option>CHOOSE</option>
+                </select>
+            </div>
+        </div>
+        <div class="grid-x grid-padding-x">
+            <div class="cell large-6 small-6">
+                <span class="label">Asset Type</span>
+                <select id="assetType" required>
+                    <option>CHOOSE</option>
+                </select>
+            </div>
+            <div class="cell large-6 small-6">
+                <span class="label">Serial Number</span>
+                <input type="text" id="serialNumber" style="text-transform: uppercase;">
+            </div>
+        </div>
+        <div class="grid-x grid-padding-x">
+            <div class="cell large-12 small-12">
+                <span class="label">Asset Model</span>
+                <select id="assetModel">
+                    <option>CHOOSE</option>
+                </select>
+            </div>
+        </div>
+        <div class="grid-x grid-padding-x">
+            <div class="cell large-6 small-12">
+                <span class="label">Asset Location</span>
+                <input type="text" id="assetLocation" placeholder="000Z" required style="text-transform: uppercase;" maxlength="4">
+            </div>
+            <div class="cell large-6 small-12">
+                <span class="label">Asset Description</span>
+                <input type="text" id="assetDescription" style="text-transform: uppercase;">
+            </div>
+        </div>
+        <div class="grid-x grid-padding-x">
+            <div class="cell large-6 small-6">
+                <span class="label">Purchase Date</span>
+                <input type="date" id="purchaseDate">
+            </div>
+            <div class="cell large-6 small-6">
+                <span class="label">Asset Warranty (Months)</span>
+                <input type="number" id="assetWarranty" maxlength="3">
+            </div>
+        </div>
+        <div class="grid-x grid-padding-x text-center">
+            <div class="cell large-3 small-3">
+                <span class="label alert">Bad</span>
+                <input type="checkbox" id="bad" name="titleCheckBox">
+            </div>
+            <div class="cell large-3 small-3">
+                <span class="label">Title 1</span>
+                <input type="checkbox" id="title1" name="titleCheckBox">
+            </div>
+            <div class="cell large-3 small-3">
+                <span class="label">Title 9</span>
+                <input type="checkbox" id="title9" name="titleCheckBox">
+            </div>
+            <div class="cell large-3 small-3">
+                <span class="label">31a</span>
+                <input type="checkbox" id="31a" name="titleCheckBox">
+            </div>
+        </div>
+        <div class="grid-x grid-padding-x grid-padding-y">
+            <div class="cell">
+                <input type="button" class="success_bdh button large expanded" id="assetSubmit" value="Submit Asset">
+            </div>
+        </div>
+    </form>
+    <div class="grid-x grid-padding-x text-center">
+        <div class="cell large-1 small-1">
+            <h2 id="backward">&nbsp;</h2>
+        </div>
+        <div class="cell large-10 small-10">
+            <p id="happyFace">:-D</p><h4 id="entryResult">Asset Entered</h4>
+        </div>
+        <div class="cell large-1 small-1">
+            <h2 id="forward">&nbsp;</h2>
+        </div>
+    </div>

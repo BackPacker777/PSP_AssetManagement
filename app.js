@@ -4,16 +4,20 @@ const DATA_HANDLER = require('./node/DataHandler');
 const FORMIDABLE = require('formidable');
 
 /**
- * Web server utilizing SSL
+ * Web server utilizing HTTP/2
  */
 class app {
+    #data_handler;
+    #ejsData;
+    #fileName;
+
     /**
      * @desc instantiates DataHandler object
      */
     constructor() {
-        this.data_handler = new DATA_HANDLER();
-        this.ejsData = null;
-        this.fileName = `index.ejs`;
+        this.#data_handler = new DATA_HANDLER();
+        this.#ejsData = null;
+        this.#fileName = `index.ejs`;
         this.loadServer();
     }
 
@@ -21,8 +25,8 @@ class app {
      * Route & mime type handler
      */
     loadServer() {
-        const HTTPS = require('https');
-        // const HTTP = require('http');
+        const HTTP = require('http');
+        const HTTP2 = require('http2');
         const EJS = require('ejs');
         const PORT = process.env.PORT || 443;
         const SSL_OPTIONS = {
@@ -32,15 +36,17 @@ class app {
             rejectUnauthorized: false
         };
 
-        HTTPS.createServer(SSL_OPTIONS, async (request, response) => {
-        // HTTP.createServer(async (request, response) => {
+        HTTP.createServer((request, response) => {
+            response.writeHead(301, {
+                'Location': `https://${request.headers['host']}${request.url}`
+            });
+            response.end();
+        }).listen(80);
+
+        HTTP2.createSecureServer(SSL_OPTIONS, async (request, response) => {
 
             let httpHandler = (error, string, contentType) => {
-                /*if (request.headers['x-forwarded-proto'] !== 'https') {
-                    // response.redirect(`https://${request.header('host')}${request.url}`);
-                    response.writeHead(301, {Location: `https://${request.headers['host']}${request.url}`});
-                    response.end();
-                } else */if (error) {
+                if (error) {
                     response.writeHead(500, {'Content-Type': 'text/plain'});
                     response.end('An error has occurred: ' + error.message);
                 } else if (contentType.indexOf('css') >= 0 || contentType.indexOf('js') >= 0) {
@@ -51,8 +57,8 @@ class app {
                     response.setHeader('Cache-Control', 'max-age=86400');
                     response.writeHead(200, {'Content-Type': contentType});
                     response.end(EJS.render(string, {
-                        data: this.ejsData,
-                        filename: this.fileName
+                        data: this.#ejsData,
+                        filename: this.#fileName
                     }));
                 } else {
                     response.setHeader('Cache-Control', 'max-age=86400');
@@ -69,10 +75,10 @@ class app {
                     }).on('error', (err) => {
                         next(err);
                     }).on('end', () => {
-                        this.data_handler.insertRow(formData);
+                        this.#data_handler.insertRow(formData);
                     });
                 } else if (request.headers['x-requested-with'] === 'fetch.1') {
-                    this.data_handler.getAllAssets(function (fetchedData) {
+                    this.#data_handler.getAllAssets(function (fetchedData) {
                         response.setHeader('Cache-Control', 'max-age=86400');
                         response.writeHead(200, {'content-type': 'text/plain'});
                         response.end(JSON.stringify(fetchedData));
@@ -83,7 +89,7 @@ class app {
                         body.push(chunk);
                     }).on('end', () => {
                         body = Buffer.concat(body).toString();
-                        this.data_handler.deleteAssets(body);
+                        this.#data_handler.deleteAssets(body);
                     });
                 } else if (request.headers['x-requested-with'] === 'fetch.3') {
                     let body = [];
@@ -93,7 +99,7 @@ class app {
                         next(err);
                     }).on('end', () => {
                         body = Buffer.concat(body).toString().toUpperCase();
-                        this.data_handler.queryData(body, function (fetchedData) {
+                        this.#data_handler.queryData(body, function (fetchedData) {
                             response.setHeader('Cache-Control', 'max-age=86400');
                             response.writeHead(200, {'content-type': 'text/plain'});
                             response.end(JSON.stringify(fetchedData));
@@ -119,7 +125,7 @@ class app {
                         next(err);
                     }).on('end', () => {
                         body = Buffer.concat(body).toString();
-                        this.data_handler.queryTag(body, function (tagExists) {
+                        this.#data_handler.queryTag(body, function (tagExists) {
                             response.setHeader('Cache-Control', 'max-age=86400');
                             response.writeHead(200, {'content-type': 'text/plain'});
                             response.end(JSON.stringify(tagExists));
@@ -133,7 +139,7 @@ class app {
                         next(err);
                     }).on('end', () => {
                         body = Buffer.concat(body).toString();
-                        this.data_handler.queryEditTag(body, function (assetProperties) {
+                        this.#data_handler.queryEditTag(body, function (assetProperties) {
                             response.setHeader('Cache-Control', 'max-age=86400');
                             response.writeHead(200, {'content-type': 'text/plain'});
                             response.end(JSON.stringify(assetProperties));

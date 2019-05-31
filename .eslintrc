@@ -1,11 +1,13 @@
 {
 	"parserOptions": {
-		"ecmaVersion": 8,
+		"ecmaVersion": 10,
 		"sourceType": "module"
 	},
 	"env": {
 		"browser": true,
 		"es6": true,
-		"node": true
+		"node": true,
+		"shared-node-browser": true,
+		"serviceworker": true
 	}
 }

@@ -1,24 +1,27 @@
-const VERSION = 'v1.03';
+const VERSION = 'v1.00.1';
+// importScripts('https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js');
 
 const cacheResources = async () => {
     let cacheFilesFirst = [
         './',
-        './public/views/index.ejs',
-        './public/views/header.ejs',
+        './manifest.json',
+        './public/favicons/favicon.ico',
+        './public/favicons/android-chrome-192x192.png',
+        './public/images/apple-touch-icon.png',
+        './public/views/assetEntry.ejs',
+        './public/views/assetFind.ejs',
         './public/views/footer.ejs',
-        './public/views/BCReader.ejs',
-        './public/views/itemEntry.ejs',
-        './public/views/splash.ejs',
+        './public/views/header.ejs',
+        './public/views/index.ejs',
         './public/views/scanResults.ejs',
-        './public/views/itemFind.ejs',
+        './public/views/splash.ejs',
         './public/css/foundation.min.css',
         './public/css/overrides.css',
         './public/javascripts/main.js',
-        './public/javascripts/quagga.js',
+        './public/javascripts/quagga.min.js',
         './public/javascripts/EventHandler.js',
-        './public/javascripts/SplashEventHandler.js',
-        './public/javascripts/BCScan.js',
-        './public/favicons/favicon.ico'
+        './public/javascripts/FadeStuff.js',
+        './public/javascripts/BCScan.js'
     ];
     const cache = await caches.open(VERSION);
     return cache.addAll(cacheFilesFirst);
