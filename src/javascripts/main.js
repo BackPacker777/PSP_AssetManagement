@@ -21,7 +21,7 @@ class Main {
      */
     static prepUX() {
         EventHandler.setDivDisplay([`splashDiv`,`splashScanDiv`]);
-        EventHandler.enableDisableInputs([`assetEntryBtn`,`assetFindBtn`,`assetListBtn`,`installBtn`,`splashScanBtn`]);
+        EventHandler.enableDisableInputs([`assetEntryBtn`,`assetFindBtn`,`assetListBtn`,`splashScanBtn`]);
     }
 
     /**

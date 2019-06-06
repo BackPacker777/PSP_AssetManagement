@@ -455,7 +455,7 @@ export default class EventHandler {
             document.getElementById(`assetEntryForm`).reset();
             document.getElementById(`assetFindForm`).reset();
             EventHandler.setDivDisplay([`splashDiv`,`splashScanDiv`]);
-            EventHandler.enableDisableInputs([`assetEntryBtn`,`assetFindBtn`,`assetListBtn`,`installBtn`,`splashScanBtn`]);
+            EventHandler.enableDisableInputs([`assetEntryBtn`,`assetFindBtn`,`assetListBtn`,`splashScanBtn`]);
             EventHandler.setDivDisplay([`splashDiv`, `splashScanDiv`]);
         });
     }
@@ -587,7 +587,8 @@ export default class EventHandler {
      * @param inputs
      */
     static enableDisableInputs(inputs) {
-        const INPUTS = [`assetTag`,`assetMaker`,`assetType`,`serialNumber`,`assetModel`,`assetDescription`,`assetLocation`,`purchaseDate`,`assetWarranty`,`bad`,`title1`,`title9`,`31a`,`assetSubmit`,`findAssetMaker`,`findAssetModel`,`findAssetTag`,`findAssetLocation`,`assetEntryBtn`,`assetFindBtn`,`assetListBtn`,`installBtn`,`splashScanBtn`];
+        // const INPUTS = [`assetTag`,`assetMaker`,`assetType`,`serialNumber`,`assetModel`,`assetDescription`,`assetLocation`,`purchaseDate`,`assetWarranty`,`bad`,`title1`,`title9`,`31a`,`assetSubmit`,`findAssetMaker`,`findAssetModel`,`findAssetTag`,`findAssetLocation`,`assetEntryBtn`,`assetFindBtn`,`assetListBtn`,`splashScanBtn`];
+        const INPUTS = [`assetTag`,`assetMaker`,`assetType`,`serialNumber`,`assetModel`,`assetDescription`,`assetLocation`,`purchaseDate`,`assetWarranty`,`bad`,`title1`,`title9`,`31a`,`assetSubmit`,`findAssetMaker`,`findAssetModel`,`findAssetTag`,`findAssetLocation`,`assetEntryBtn`,`assetFindBtn`,`assetListBtn`];
         for (let index of INPUTS) {
             document.getElementById(index).disabled = true;
         }
@@ -601,7 +602,7 @@ export default class EventHandler {
      * @param divs
      */
     static setDivDisplay(divs) {
-        const DIVS = [`splashDiv`,`splashScanDiv`,`assetEntryDiv`,`assetListDiv`,`assetListDivResults`,`scanResultsExistsDiv`,`scanResultsNotExistDiv`,`assetFindDiv`,`doneDiv`,`entryResult`,`installBanner`,`scannerContainer`];
+        const DIVS = [`splashDiv`,`splashScanDiv`,`assetEntryDiv`,`assetListDiv`,`assetListDivResults`,`scanResultsExistsDiv`,`scanResultsNotExistDiv`,`assetFindDiv`,`doneDiv`,`entryResult`,`scannerContainer`];
         for (let index of DIVS) {
             if (document.getElementById(index)) {
                 document.getElementById(index).style.display = `none`;

@@ -1,4 +1,4 @@
-const VERSION = 'v1.00.1';
+const VERSION = 'v1.00.2';
 // importScripts('https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js');
 
 const cacheResources = async () => {
@@ -8,6 +8,7 @@ const cacheResources = async () => {
         './public/favicons/favicon.ico',
         './public/favicons/android-chrome-192x192.png',
         './public/images/apple-touch-icon.png',
+        './public/images/pwa_logo.png',
         './public/views/assetEntry.ejs',
         './public/views/assetFind.ejs',
         './public/views/footer.ejs',
@@ -32,11 +33,6 @@ self.addEventListener('install', async (event) => {
     await self.skipWaiting();
 });
 
-const cachedResource = async (request) => {
-    const cache = await caches.open(VERSION);
-    return await cache.match(request);
-};
-
 self.addEventListener('activate', async (event) => {
     console.log(`SW activated:  ${event}`);
     await self.clients.claim();
@@ -44,7 +40,10 @@ self.addEventListener('activate', async (event) => {
 
 self.addEventListener('fetch', async (event) => {
     console.log(`Fetch event: ${event.request.url}`);
-    await event.respondWith(cachedResource(event.request));
+    event.respondWith(fromNetwork(event.request, 400).catch(async () => {
+        return fromCache(event.request);
+    }));
+    // await event.respondWith(cachedResource(event.request));
 });
 
 self.addEventListener('push', async (event) => {
@@ -54,3 +53,21 @@ self.addEventListener('push', async (event) => {
 self.addEventListener('sync', async (event) => {
 
 });
+
+function fromNetwork(request, timeout) {
+    return new Promise(function (fulfill, reject) {
+        let timeoutId = setTimeout(reject, timeout);
+        fetch(request).then(function (response) {
+            clearTimeout(timeoutId);
+            fulfill(response);
+        }, reject);
+    });
+}
+
+function fromCache(request) {
+    return caches.open(VERSION).then(function (cache) {
+        return cache.match(request).then(function (matching) {
+            return matching || Promise.reject('no-match');
+        });
+    });
+}
